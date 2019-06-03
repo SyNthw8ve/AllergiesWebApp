@@ -3,10 +3,65 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Map Allergies</title>
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
+        <link rel="stylesheet" href="./resources/css/index.css"/>
+        
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+   crossorigin=""></script>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <div>
+            <nav>
+            
+            <ul>
+                <li><a href="index.xhtml">Home</a></li>
+                <li><a>Sign In</a></li>
+                <li><a>Sign Up</a></li>
+            </ul>
+        </nav>
+        
+        <h2 id="nav-title">MapAllergies</h2>
+        </div>
+        
+        
+        
+        <div class="container">
+            
+            <div class="grid">
+                
+                <div class="grid">
+                    
+                    <h4>Map Allergies</h4>
+                    
+                    <div id="main-text">
+                        
+                        
+                        
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed fermentum arcu. Ut a ornare sem.
+                        Aenean rutrum varius ipsum, ut gravida dolor suscipit sed. Sed et convallis dui, a volutpat orci.
+                        Nulla gravida metus nec pharetra pellentesque. Nulla ac nisl orci. Praesent eu leo mollis, maximus dolor
+                        at, gravida ex. Nulla facilisi. Aliquam cursus ullamcorper nisi vitae auctor.
+                        
+                    </div>
+                    
+                    <button id="signin">Sign In</button>
+                    <button id="signup">Sign Up</button>
+                </div>
+                
+                <div id="mapid"></div>
+                
+                
+                
+            </div>
+            
+        </div>
+        <script src="./resources/js/map.js"></script>
     </h:body>
 </html>
 
