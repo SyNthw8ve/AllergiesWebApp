@@ -4,50 +4,54 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html">
     <h:head>
         <title>Map Allergies</title>
-        
+
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
-        <link rel="stylesheet" href="./resources/css/index.css"/>
-        
+        <link rel="stylesheet" href="./resources/css/signin.css"/>
+
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-   crossorigin=""/>
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
         <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-   crossorigin=""></script>
+                integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
     </h:head>
     <h:body>
         <div>
             <nav>
-            
-            <ul>
-                <li><a href="index.xhtml">Home</a></li>
-                <li><a href="signin.xhtml">Sign In</a></li>
-                <li><a href="signup.xhtml">Sign Up</a></li>
-            </ul>
-        </nav>
-        
-        <h2 id="nav-title">MapAllergies</h2>
+
+                <ul>
+                    <li><a href="index.xhtml">Home</a></li>
+                    <li><a href="signin.xhtml">Sign In</a></li>
+                    <li><a href="signup.xhtml">Sign Up</a></li>
+                </ul>
+            </nav>
+
+            <h2 id="nav-title">MapAllergies</h2>
         </div>
-        
-        
-      
-    <div class="container">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname"/>
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw"/>
 
-    <button type="submit">Login</button>
-    <label>
-      <input type="checkbox" checked="checked" name="remember"/> Remember me
-    </label>
-  </div>
 
-  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-    <span class="psw">Forgot <a href="#">password?</a></span>
-  </div>
+        <div class="container">
+            <form>
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="uname"/>
+
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="psw"/>
+
+                <button type="submit">Login</button>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"/> Remember me
+                </label>
+
+            </form>
+
+        </div>
+
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" class="cancelbtn">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+        </div>
 
         <script src="./resources/js/map.js"></script>
     </h:body>

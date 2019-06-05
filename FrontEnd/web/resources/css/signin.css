@@ -1,0 +1,63 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 5/jun/2019, 15:25:40
+    Author     : nuno1
+*/
+
+.container {
+    
+    margin: 0 50%;
+    border: 3px solid #000000;
+}
+
+form {
+    
+    display: block;
+}
+
+nav {
+    
+    float: right;
+}
+
+#nav-title {
+    
+    font-family: 'Dancing Script';
+    margin-left: 15px;
+}
+
+nav ul {
+    
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    
+    font-size: 18px;
+    font-family: 'Roboto';
+}
+
+nav li {
+    
+    display: inline-block;
+    margin-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 2px;
+    
+    cursor: pointer;
+}
+
+nav li:hover {
+    
+    border-bottom: 3px solid #70EBFF;
+}
+
+nav a {
+    
+    text-decoration: none;
+    color: #000000;
+}
+
