@@ -112,10 +112,16 @@ nav a {
     grid-column-gap: 0px;
 }
 
-button {
+.click {
     
-    height: 55px;
+    height: 50px;
     width: 80%;
+    
+    line-height: 50px;
+    
+    text-align: center;
+    text-decoration: none;
+    color: black;
     
     border: none;
     background: none;
