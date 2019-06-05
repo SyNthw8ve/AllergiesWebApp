@@ -90,7 +90,7 @@ nav a {
     font-family: 'Roboto';
     
     margin-top: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
 }
 
 .grid h4 {
@@ -107,10 +107,15 @@ nav a {
     font-family: 'Dancing Script';
 }
 
+.inner-grid {
+    
+    grid-column-gap: 0px;
+}
+
 button {
     
-    height: 65px;
-    width: 90%;
+    height: 55px;
+    width: 80%;
     
     border: none;
     background: none;
@@ -131,6 +136,6 @@ button {
 
 #signup {
     
-    background-color: #8D70FF;
+    background-image: linear-gradient(to top, #8d70ff, #66b4e8);
     color: white;
 }
