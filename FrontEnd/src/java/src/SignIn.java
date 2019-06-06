@@ -13,7 +13,7 @@ import javax.faces.bean.RequestScoped;
  *
  * @author nuno1
  */
-@ManagedBean
+@ManagedBean(name="obj")
 @RequestScoped
 public class SignIn {
 

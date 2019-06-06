@@ -20,6 +20,8 @@ public class Home {
     /**
      * Creates a new instance of Home
      */
+    String name = "Nuno";
+    
     public Home() {
     }
     

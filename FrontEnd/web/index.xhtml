@@ -6,7 +6,6 @@
         <title>Map Allergies</title>
         
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
-        <link rel="stylesheet" href="./resources/css/index.css"/>
         
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -16,6 +15,7 @@
    crossorigin=""></script>
     </h:head>
     <h:body>
+        <h:outputStylesheet name="resources/css/index.css" />
         <div>
             <nav>
             
@@ -47,14 +47,9 @@
                         at, gravida ex. Nulla facilisi. Aliquam cursus ullamcorper nisi vitae auctor.
                         
                     </div>
-                    
-<<<<<<< HEAD
-                    <button id="signin"><a href="signin.xhtml">Sign In</a></button>
-                    <button id="signup"><a href="signup.xhtml">Sign Up</a></button>
-=======
+ 
                     <a class="click" id="signin" href="signin.xhtml">Sign In</a>
                     <a class="click" id="signup" href="signup.xhtml">Sign Up</a>
->>>>>>> 24443e16e842628396f1044ceb59e90aecf210ef
                 </div>
                 
                 <div id="mapid"></div>
