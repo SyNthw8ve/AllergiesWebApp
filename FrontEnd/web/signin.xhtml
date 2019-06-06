@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
     <h:head>
         <title>Map Allergies</title>
 
@@ -31,28 +33,38 @@
 
 
 
-        <div class="container">
-            <form>
-                <label for="uname"><b>Username</b></label>
-                <input type="text" placeholder="Enter Username" name="uname"/>
-
-                <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw"/>
-
-                <button type="submit">Login</button>
-                <label>
-                    <input type="checkbox" checked="checked" name="remember"/> Remember me
-                </label>
-
-            </form>
-
-        </div>
-
-        <div class="container" style="background-color:#f1f1f1">
-            <button type="button" class="cancelbtn">Cancel</button>
-            <span class="psw">Forgot <a href="#">password?</a></span>
-        </div>
-
+      
+    <div class="container">
+        <f:view>
+        <h:form id="loginForm">
+            <table frame="box">
+                <tr>
+                    <th>Login Page</th>
+                </tr>
+                <tr>
+                    <td><h:outputText value="Enter Your Username : " /></td>
+                    <td><h:inputText id="inputName" value="#{signin.username}"
+                            required="true" requiredMessage="Name field must not be empty" />
+                    </td>
+                    <td><h:message for="inputName" style="color:red" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputText value="Enter password :" /></td>
+                    <td><h:inputSecret id="inputPassword" value="#{signin.password}"
+                            required="true"
+                            requiredMessage="Password field must not be empty" /></td>
+                    <td><h:message for="inputPassword" style="color:red" /></td>
+                </tr>
+                <tr>
+                    <td><h:commandButton value="Sign In" action="#{signin.login}" /></td>
+                    <td><h:outputText value="Not a User " /> 
+                        <h:outputLink value="signup.xhtml">Sign Up</h:outputLink>
+                    </td>
+                </tr>
+            </table>
+        </h:form>
+    </f:view>
+    </div>
         <script src="./resources/js/map.js"></script>
     </h:body>
 </html>
