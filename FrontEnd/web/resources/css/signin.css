@@ -8,55 +8,114 @@ and open the template in the editor.
     Author     : nuno1
 */
 
-.container {
-    
-    margin: 0 50%;
+div.container {
+
     border: 3px solid #000000;
+    border-radius: 50px;
+
+    margin: 0px auto;
+    margin-top: 60px;
+    width: 40%;
+}
+
+.container h3 {
+
+    margin: 15px auto;
+    text-align: center;
+    font-size: 40px;
 }
 
 form {
-    
-    display: block;
+
+    width: 70%;
+    height: 500px;
+    margin: 0px auto;
 }
 
-nav {
+form input:focus {
+
+    outline: none;
+}
+
+form p {
     
+    text-align: center;
+}
+
+form p a {
+    
+    text-decoration: none;
+    color: #8d70ff;
+}
+
+form input {
+
+    display: block;
+    margin: 20px auto;
+    width: 250px;
+    height: 40px;
+    border-radius: 30px;
+    border: #8d70ff 2px solid;
+    text-indent: 15px;
+    
+    font-size: 16px;
+
+}
+
+form input[type="button"] {
+    
+    height: 50px;
+    border-radius: 50px;
+    border: transparent;
+    background-color: #66B4E8;
+    font-size: 17px;
+    color: white;
+    margin-top: 70px;
+    
+    width: 280px;
+    
+    cursor: pointer;
+}
+
+
+nav {
+
     float: right;
 }
 
 #nav-title {
-    
+
     font-family: 'Dancing Script';
     margin-left: 15px;
 }
 
 nav ul {
-    
+
     list-style: none;
     margin: 0;
     padding: 0;
-    
+
     font-size: 18px;
     font-family: 'Roboto';
 }
 
 nav li {
-    
+
     display: inline-block;
     margin-right: 30px;
     padding-top: 10px;
     padding-bottom: 2px;
-    
+
     cursor: pointer;
 }
 
 nav li:hover {
-    
+
     border-bottom: 3px solid #70EBFF;
 }
 
 nav a {
-    
+
     text-decoration: none;
     color: #000000;
 }

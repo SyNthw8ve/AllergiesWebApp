@@ -6,7 +6,7 @@
       >
     <h:head>
         <title>Map Allergies</title>
-        <h:outputStylesheet library="css" name="css/signin.css" />
+
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
@@ -15,12 +15,12 @@
         <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
                 integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
         crossorigin=""></script>
+        <h:outputStylesheet library="css" name="signin.css" />
     </h:head>
     <h:body>
-        
+
         <div>
             <nav>
-
                 <ul>
                     <li><a href="index.xhtml">Home</a></li>
                     <li><a href="signin.xhtml">Sign In</a></li>
@@ -31,40 +31,29 @@
             <h2 id="nav-title">MapAllergies</h2>
         </div>
 
+        <div class="container">
+            <h3>Sign In</h3>
+            
+                <h:form id="loginForm">
+                    
+                    <label for="inputName">Username</label>
+                    <h:inputText id="inputName" value="#{signin.username}"
+                                 required="true" requiredMessage="Name field must not be empty" />
 
+                    <h:message for="inputName" style="color:red" />
 
-      
-    <div class="container">
-        <f:view>
-        <h:form id="loginForm">
-            <table frame="box">
-                <tr>
-                    <th>Login Page</th>
-                </tr>
-                <tr>
-                    <td><h:outputText value="Enter Your Username : " /></td>
-                    <td><h:inputText id="inputName" value="#{signin.username}"
-                            required="true" requiredMessage="Name field must not be empty" />
-                    </td>
-                    <td><h:message for="inputName" style="color:red" /></td>
-                </tr>
-                <tr>
-                    <td><h:outputText value="Enter password :" /></td>
-                    <td><h:inputSecret id="inputPassword" value="#{signin.password}"
-                            required="true"
-                            requiredMessage="Password field must not be empty" /></td>
-                    <td><h:message for="inputPassword" style="color:red" /></td>
-                </tr>
-                <tr>
-                    <td><h:commandButton value="Sign In" action="#{signin.login}" /></td>
-                    <td><h:outputText value="Not a User " /> 
-                        <h:outputLink value="signup.xhtml">Sign Up</h:outputLink>
-                    </td>
-                </tr>
-            </table>
-        </h:form>
-    </f:view>
-    </div>
+                    <label for="inputPassword">Password</label>
+                    <h:inputSecret id="inputPassword" value="#{signin.password}"
+                                   required="true"
+                                   requiredMessage="Password field must not be empty" />
+                    <h:message for="inputPassword" style="color:red" />
+                    <h:button value="Sign In" onclick=""> </h:button>
+                
+                    <p>Not a User? <a href="signup.xhtml">Sign Up</a></p>
+                    
+                </h:form>
+            
+        </div>
         <script src="./resources/js/map.js"></script>
     </h:body>
 </html>
