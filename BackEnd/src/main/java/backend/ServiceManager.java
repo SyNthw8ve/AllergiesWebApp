@@ -19,4 +19,6 @@ public interface ServiceManager extends java.rmi.Remote{
     public void add_replica(ReplicaManager rm) throws RemoteException;
     
     public Vector<ReplicaManager> get_replicas() throws RemoteException;
+    
+    public void try_request() throws RemoteException;
 }

@@ -10,7 +10,7 @@ package backend;
  *
  * @author nuno1
  */
-public class AuthRequest {
+public class AuthRequest implements java.io.Serializable {
     
     private String username;
     private String password;

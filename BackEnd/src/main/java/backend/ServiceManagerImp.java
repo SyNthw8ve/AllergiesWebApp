@@ -43,9 +43,18 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
             
             primary = rm;
             
+            rm.promote();
+            
             java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry(this.regPort);
 
             registry.rebind("primary", rm);
+            
+            System.out.println("bound primary");
+            
+        } else {
+            
+            System.out.println("added another replica");
+            
         }
     }
     
@@ -53,6 +62,17 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
     public Vector<ReplicaManager> get_replicas() throws RemoteException {
         
         return this.RMs;
+    }
+    
+    @Override
+    public void try_request() throws RemoteException {
+        
+        if(this.primary != null) {
+            
+            User user = new User("test", "test", new Vector<Integer>(), -1);
+            
+            this.primary.add_user(user);
+        }
     }
     
     public ReplicaManager get_primary() {
@@ -64,9 +84,12 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
         
         try {
             
+            //System.out.println("Checking primary health...");
+            
             if (this.primary != null) {
                 
                 this.primary.is_alive();
+                this.try_request();
             }
             
         } catch (RemoteException e) {
@@ -77,7 +100,9 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
     
     public void elect_primary() {
         
-        this.RMs.remove(0);
+        
+        this.RMs.remove(this.primary);
+
         
         for( ReplicaManager rm : this.RMs) {
             
@@ -91,6 +116,9 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
                
                rm.promote();
                
+               this.primary = rm;
+               
+               System.out.println("Elected new primary");
                break;
                 
             } catch (RemoteException e) {
@@ -98,6 +126,7 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
                 
             }
         }
+        
         
     }
     
@@ -110,7 +139,7 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
             regPort = Integer.parseInt(args[0]);
         }
         
-        ServiceManagerImp sm = new ServiceManagerImp(regPort);
+        final ServiceManagerImp sm = new ServiceManagerImp(regPort);
         
         java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry(regPort);
 
@@ -122,15 +151,15 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
 
             @Override
             public void run() {
+                
                 sm.check_primary();
             }
         };
         
         timer.schedule(task, 0, 1000);
+        
+        System.out.println("Bound");
     }
-
-    
-    
 }
 
 

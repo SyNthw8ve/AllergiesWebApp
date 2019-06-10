@@ -10,30 +10,30 @@ package backend;
  *
  * @author nuno1
  */
-public class Location {
+public class Location implements java.io.Serializable {
     
-    private String type;
-    private int lng;
-    private int lat;
+    private int type;
+    private float lng;
+    private float lat;
     
-    public Location(int lng, int lat, String type) {
+    public Location(float lng, float lat, int type) {
         
         this.lng = lng;
         this.lat= lat;
         this.type = type;
     }
     
-    public int get_long() {
+    public float get_long() {
         
         return this.lng;
     }
     
-    public int get_lat() {
+    public float get_lat() {
         
         return this.lat;
     }
     
-    public String get_type() {
+    public int get_type() {
         
         return this.type;
     }

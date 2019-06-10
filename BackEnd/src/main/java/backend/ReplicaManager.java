@@ -16,7 +16,7 @@ import java.util.Vector;
  */
 public interface ReplicaManager extends java.rmi.Remote {
     
-    public void is_alive() throws RemoteException;
+    public boolean is_alive() throws RemoteException;
     
     public Vector<Location> get_locations() throws RemoteException;
     
@@ -24,7 +24,7 @@ public interface ReplicaManager extends java.rmi.Remote {
     
     public void add_user(User u) throws RemoteException;
     
-    public Vector<Location> get_risk(Location p, int distance, Date days, Vector<Integer> polen) throws RemoteException;
+    public Vector<Location> get_risk(Location p, float distance, Date days, Vector<Integer> polen) throws RemoteException;
     
     public void add_location(User u, Location p) throws RemoteException;
     
@@ -35,4 +35,8 @@ public interface ReplicaManager extends java.rmi.Remote {
     public void promote() throws RemoteException;
     
     public boolean is_primary() throws RemoteException;
+    
+    public String get_address() throws RemoteException;
+    
+    public int get_port() throws RemoteException;
 }
