@@ -5,15 +5,18 @@
  */
 package backend;
 
-import java.lang.Math;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
 import java.io.IOException;
+import java.lang.Math;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.rmi.NotBoundException;
@@ -26,6 +29,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -36,12 +40,15 @@ import org.glassfish.grizzly.http.server.HttpServer;
 public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaManager, java.io.Serializable {
 
     private final float earth_radius = 6371000;
-    
+
     private String address;
+
     private int port;
+
     boolean is_primary = false;
 
     ServiceManager sm;
+
     PostgresConnector pc;
 
     public ReplicaManagerImp(String address, int port, ServiceManager sm, PostgresConnector pc) throws RemoteException {
@@ -128,25 +135,32 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
     @Override
     public void add_user(User u) throws RemoteException {
 
-        try {
+        /*try {
 
-            Statement state = this.pc.getStatement();
+         Statement state = this.pc.getStatement();
 
-            String query = "INSERT INTO users (username, password) VALUES ('" + u.get_username() + "','" + u.get_password() + "') RETURNING id;";
-            ResultSet set = state.executeQuery(query);
+         String query = "INSERT INTO users (username, password) VALUES ('" + u.get_username() + "','" + u.get_password() + "') RETURNING id;";
+         ResultSet set = state.executeQuery(query);
 
-            set.next();
+         set.next();
 
-            u.id = set.getInt(1);
+         u.id = set.getInt(1);
 
-            set.close();
-            state.close();
+         set.close();
+            
+         for(int polen : u.get_polen()) {
+                
+         query = "INSERT INTO allergies (user_id, type) VALUES (" + u.id +"," + polen + ");";
+                
+         state.execute(query);
+         }
+            
+         state.close();
 
-        } catch (SQLException ex) {
+         } catch (SQLException ex) {
 
-            Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+         Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
+         }*/
         this.update_user(u);
     }
 
@@ -159,66 +173,66 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
     public void add_location(User u, Location p) throws RemoteException {
 
         try {
-            
+
             Statement state = this.pc.getStatement();
             Date date = new Date();
 
             String query = "INSERT INTO polen (polen_type, long, lat, user_id, date) VALUES (" + p.get_type() + "," + p.get_long() + ","
                     + p.get_lat() + "," + u.id + "," + date.getTime() + ");";
-            
+
             state.executeUpdate(query);
-            
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public void remove_location(User u, int id) throws RemoteException {
-        
+
         try {
-            
+
             Statement state = this.pc.getStatement();
-            
+
             String query = "DELETE FROM polen WHERE id = " + id + " AND user_id = " + u.id + ";";
-            
+
             state.executeUpdate(query);
             state.close();
-            
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public Vector<Location> get_user_locations(User u) throws RemoteException {
-        
+
         Vector<Location> locations = new Vector<>();
-        
+
         try {
-            
+
             Statement state = this.pc.getStatement();
-            
+
             String query = "SELECT polen_type, long, lat FROM polen WHERE user_id =" + u.id + ";";
-            
+
             ResultSet set = state.executeQuery(query);
-            
-            while(set.next()) {
-                
+
+            while (set.next()) {
+
                 locations.add(new Location(set.getFloat("long"), set.getFloat("lat"), set.getInt("type")));
-                
+
             }
-            
+
             set.close();
             state.close();
-            
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return locations;
     }
 
@@ -245,25 +259,25 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
         return this.port;
     }
-    
+
     public double haversine(double longA, double latA, double longB, double latB) {
-        
+
         double longRadA = to_radian(longA);
         double longRadB = to_radian(longB);
         double latRadA = to_radian(latA);
         double latRadB = to_radian(latB);
-        
-        double havLat = Math.pow(Math.sin((latRadA - latRadB)/2), 2);
-        double havLong = Math.pow(Math.sin((longRadA - longRadB)/2), 2);
-        
-        double square = Math.sqrt(havLat + Math.cos(latA)*Math.cos(latB)*havLong);
-        
-        return 2*earth_radius*Math.asin(square);
+
+        double havLat = Math.pow(Math.sin((latRadA - latRadB) / 2), 2);
+        double havLong = Math.pow(Math.sin((longRadA - longRadB) / 2), 2);
+
+        double square = Math.sqrt(havLat + Math.cos(latA) * Math.cos(latB) * havLong);
+
+        return 2 * earth_radius * Math.asin(square);
     }
-    
+
     public double to_radian(double x) {
-        
-        return x*(Math.PI/180);
+
+        return x * (Math.PI / 180);
     }
 
     public void update_user(User u) throws RemoteException {
@@ -278,12 +292,20 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
                 Client client = Client.create();
                 WebResource web_resource;
 
-                uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica";
+                uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/user";
                 web_resource = client.resource(uri);
 
                 System.out.println(uri);
 
-                ClientResponse res = web_resource.accept("application/json").get(ClientResponse.class);
+                try {
+
+                    web_resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, u);
+
+                } catch (Exception e) {
+
+                    System.out.println(e.toString());
+                }
+
             }
         }
     }
@@ -297,10 +319,28 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
     }
 
     public static HttpServer startServer(URI base_uri) throws IOException {
-        
 
         ResourceConfig rc = new PackagesResourceConfig("backend");
         return GrizzlyServerFactory.createHttpServer(base_uri, rc);
+    }
+    
+    public static void add_database_info(DataObject data, String address, int port) {
+        
+        Client client = Client.create();
+            WebResource web_resource;
+
+            String url = "http://" + address + ":" + port + "/allergies/replica/rep";
+
+            web_resource = client.resource(url);
+
+            try {
+
+                web_resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, data);
+
+            } catch (Exception e) {
+
+                System.out.println(e.toString());
+            }
     }
 
     public static void main(String args[]) throws RemoteException, NotBoundException, MalformedURLException, IOException, Exception {
@@ -310,6 +350,7 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
         if (args.length == 2) {
 
+            try {
             String address = args[0];
             int port = Integer.parseInt(args[1]);
 
@@ -317,7 +358,10 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
                     + regPort + "/service");
 
             PostgresConnector pc = new PostgresConnector("localhost", "l38489", "l38489", "1234");
+            DataObject data = new DataObject("localhost", "l38489", "l38489", "1234");
 
+            checkTables("localhost", "l38489", "l38489", "1234");
+            
             pc.connect();
 
             ReplicaManagerImp replica = new ReplicaManagerImp(args[0], port, sm, pc);
@@ -328,17 +372,107 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
             HttpServer httpServer = startServer(uri);
 
+            add_database_info(data, address, port);
+
             System.in.read();
 
             httpServer.stop();
 
             pc.disconnect();
+            
+            }
+            
+            catch(Exception e) {
+                
+                System.out.println(e.toString());
+            }
 
         } else {
 
             System.out.println("Insuficient args");
         }
 
+    }
+    
+    public static void checkTables(String host, String user, String database, String psw) throws Exception {
+
+        PostgresConnector pc = new PostgresConnector(host, database, user, psw);
+
+        pc.connect();
+        
+        try (Statement state = pc.getStatement()) {
+            ResultSet set = pc.con.getMetaData().getTables(null, null, "users", null);
+            
+            if (!set.next()) {
+                
+                System.out.println("Tabela users não encontrada. A criar...");
+                String query = "create table users(id serial primary key, username varchar, password varchar);";
+                
+                state.executeUpdate(query);
+                
+                System.out.println("Tabela criada");
+                
+            } else {
+                
+                System.out.println("Tabela users existe.");
+            }
+            
+            set = pc.con.getMetaData().getTables(null, null, "user_roles", null);
+            
+            if (!set.next()) {
+                
+                System.out.println("Tabela user_roles não encontrada. A criar...");
+                String query = "create table user_roles(id serial primary key, user_id integer "
+                        + "references users (id) on delete cascade, username varchar, role varchar);";
+                
+                state.executeUpdate(query);
+                
+                System.out.println("Tabela criada");
+                
+            } else {
+                
+                System.out.println("Tabela user_roles existe.");
+            }
+            
+            set = pc.con.getMetaData().getTables(null, null, "polen", null);
+            
+            if (!set.next()) {
+                
+                System.out.println("Tabela polen não encontrada. A criar...");
+                String query = "create table polen(id serial primary key, polen_type integer, long float, lat float, user_id integer "
+                        + "references users (id) on delete cascade, data date);";
+                
+                state.executeUpdate(query);
+                
+                System.out.println("Tabela criada");
+                
+            } else {
+                
+                System.out.println("Tabela polen existe.");
+            }
+            
+            set = pc.con.getMetaData().getTables(null, null, "allergies", null);
+            
+            if (!set.next()) {
+                
+                System.out.println("Tabela allergies não encontrada. A criar...");
+                String query = "create table allergies("
+                        + "id serial primary key, user_id integer "
+                        + "references users (id) on delete cascade, type integer);";
+                
+                state.executeUpdate(query);
+                
+                System.out.println("Tabela criada");
+                
+            } else {
+                
+                System.out.println("Tabela allergies existe.");
+            }
+            
+            set.close();
+        }
+
+        pc.disconnect();
     }
 
 }

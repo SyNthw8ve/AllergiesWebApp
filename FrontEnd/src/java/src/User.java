@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package backend;
+package src;
 
 import java.util.Vector;
 import javax.xml.bind.annotation.XmlElement;

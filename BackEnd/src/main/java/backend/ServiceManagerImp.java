@@ -89,7 +89,7 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
             if (this.primary != null) {
                 
                 this.primary.is_alive();
-                this.try_request();
+               // this.try_request();
             }
             
         } catch (RemoteException e) {

@@ -34,9 +34,13 @@
         <div class="container">
             <h3>Sign In</h3>
             
-                <h:form id="loginForm">
+            <form id="loginForm" method="POST" action="j_security_check">
+                <input type="text" name="j_username"/>
+                <input type="password" name="j_password"/>
+                <input type="submit" value="Go" />
+            </form>
                     
-                    <label for="inputName">Username</label>
+                    <!--<label for="inputName">Username</label>
                     <h:inputText id="inputName" value="#{signin.username}"
                                  required="true" requiredMessage="Name field must not be empty" />
 
@@ -49,9 +53,9 @@
                     <h:message for="inputPassword" style="color:red" />
                     <h:button value="Sign In" onclick=""> </h:button>
                 
-                    <p>Not a User? <a href="signup.xhtml">Sign Up</a></p>
+                    <p>Not a User? <a href="signup.xhtml">Sign Up</a></p>-->
                     
-                </h:form>
+               
             
         </div>
         <script src="./resources/js/map.js"></script>

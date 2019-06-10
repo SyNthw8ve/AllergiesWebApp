@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/FrontEnd"/>
+<Context antiJARLocking="true" path="/FrontEnd">
+ 
+  <Realm className="org.apache.catalina.realm.JDBCRealm" localDataSource="true"
+         driverName="org.postgresql.Driver"
+         connectionURL="jdbc:postgresql://localhost/l38489?user=l38489&amp;password=1234"
+         userTable="users" userNameCol="username" userCredCol="password"
+         userRoleTable="user_roles" roleNameCol="role"
+         digest="MD5"/>
+</Context>

@@ -14,8 +14,9 @@ public class PostgresConnector {
     private String PWD;
 
     Connection con = null;
+    
     Statement stmt = null;
-
+    
     /**
      *
      * @param host
