@@ -44,13 +44,21 @@ public class Profile {
      * Creates a new instance of Profile
      */
     String username = "";
-    int allergy = 1;
+    int allergy = -1;
     User user;
-    int polen_type = 1;
+    int polen_type = -1;
     float lng;
     float lat;
     
+    int up_polen_type = -1;
+    float up_lng;
+    float up_lat;
+    
+    float risk_lng;
+    float risk_lat;
+    
     List<Location> user_locations;
+    List<Location> risk_locations;
     
     public Profile() {
     }
@@ -95,7 +103,12 @@ public class Profile {
         return this.user_locations;
     }
     
-    public List<Integer> getUser_Allergies() {
+    public List<Location> getRisk_Locations() {
+        
+        return this.risk_locations;
+    }
+    
+    public List<Allergy> getUser_Allergies() {
         
         return this.user.get_polen();
     }
@@ -108,6 +121,58 @@ public class Profile {
     public void setAllergy(int allergy) {
         
         this.allergy = allergy;
+    }
+    
+    
+    public int getUp_polen_type() {
+        
+        return this.up_polen_type;
+    }
+    
+    public void setUp_polen_type(int polen) {
+        
+        this.up_polen_type = polen;
+    }
+    
+    public void setUp_lng(float lng) {
+        
+        this.up_lng = lng;
+    }
+    
+    public void setUp_lat(float lat) {
+        
+        this.up_lat = lat;
+    }
+    
+    public float getUp_lng() {
+        
+        return this.up_lng;
+    }
+    
+    public float getUp_lat() {
+        
+        return this.up_lat;
+    }
+    
+    public void setRisk_lng(float lng) {
+        
+        this.risk_lng = lng;
+    }
+    
+    public void setRisk_lat(float lat) {
+        
+        this.risk_lat = lat;
+    }
+    
+    
+    public float getRisk_lng() {
+        
+        return this.risk_lng;
+    }
+    
+    public float getRisk_lat() {
+        
+        return this.risk_lat;
     }
     
     @PostConstruct
@@ -169,6 +234,8 @@ public class Profile {
             WebTarget webTarget = client.target(uri).path("location");
 
             webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(l, MediaType.APPLICATION_XML));
+            
+            this.polen_type = -1;
         }
         
         catch(Exception e) {
@@ -199,6 +266,19 @@ public class Profile {
         }
     }
     
+    public void update_location(int id) {
+        
+        String uri = this.get_replica_location();
+
+        Client client = ClientBuilder.newClient();
+
+        WebTarget webTarget = client.target(uri).path("location");
+        
+        Location l = new Location(this.up_lng, this.up_lat, this.up_polen_type, id);
+        
+        webTarget.request(MediaType.APPLICATION_XML).put(Entity.entity(l, MediaType.APPLICATION_XML));
+    }
+    
     public void logout() throws IOException {
         
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
@@ -219,6 +299,52 @@ public class Profile {
             Allergy new_allergy = new Allergy(this.user.get_id(), this.allergy);
             
             webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(new_allergy, MediaType.APPLICATION_XML));
+            
+            this.allergy = -1;
+        }
+        
+        catch(Exception e) {
+            
+            System.out.println(e.toString());
+        }
+    }
+    
+    public void remove_allergies(Allergy allergy) {
+        
+        try {
+            
+            String uri = this.get_replica_location();
+            
+            System.out.println(allergy.get_id());
+            System.out.println(allergy.get_type());
+
+            Client client = ClientBuilder.newClient();
+
+            WebTarget webTarget = client.target(uri).path("allergies").queryParam("user_id", allergy.get_id()).queryParam("type", allergy.get_type());
+
+            webTarget.request(MediaType.APPLICATION_XML).delete();
+        }
+        
+        catch(Exception e) {
+            
+            System.out.println(e.toString());
+        }
+    }
+    
+    public void get_risk() {
+        
+        try {
+            
+            String uri = this.get_replica_location();
+            
+            Client client = ClientBuilder.newClient();
+
+            WebTarget webTarget = client.target(uri).path("risk").queryParam("id", this.user.get_id()).queryParam("lng", this.risk_lng).queryParam("lat", this.risk_lat);
+
+            Locations risks = webTarget.request(MediaType.APPLICATION_XML).get(Locations.class);
+            
+            this.risk_locations = risks.getLocations();
+            
         }
         
         catch(Exception e) {

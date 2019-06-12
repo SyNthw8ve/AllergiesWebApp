@@ -23,13 +23,13 @@ public class User implements java.io.Serializable {
     @XmlElement(required = true)
     private String username;
     @XmlElement(required = true)
-    private List<Integer> polen;
+    private List<Allergy> polen;
     @XmlElement(required = true)
     private String password;
     
     public User() {}
     
-    public User(String username, String password, List<Integer> polen, int id) {
+    public User(String username, String password, List<Allergy> polen, int id) {
         
         this.username = username;
         this.password = password;
@@ -47,7 +47,7 @@ public class User implements java.io.Serializable {
         return this.password;
     }
     
-    public List<Integer> get_polen() {
+    public List<Allergy> get_polen() {
         
         return this.polen;
     }

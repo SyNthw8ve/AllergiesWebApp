@@ -69,7 +69,7 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
         
         if(this.primary != null) {
             
-            User user = new User("test", "test", new Vector<Integer>(), -1);
+            //User user = new User("test", "test", new Vector<Integer>(), -1);
             
             //this.primary.add_user(user);
         }

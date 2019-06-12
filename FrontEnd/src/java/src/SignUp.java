@@ -6,6 +6,7 @@
 
 package src;
 
+import backend.Allergy;
 import backend.Locations;
 import backend.ReplicaManager;
 import backend.User;
@@ -68,7 +69,7 @@ public class SignUp {
             ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + "localhost" + ":"
                     + 9000 + "/primary");
             
-            User new_user = new User(this.username, this.password, new Vector<Integer>(), -1);
+            User new_user = new User(this.username, this.password, new Vector<Allergy>(), -1);
             
             Client client = ClientBuilder.newClient();
             

@@ -28,42 +28,74 @@
             <h:commandButton value="Submit" action="#{profile.add_location}"/>
 
         </h:form>
-        
+
         <h4>User Allergies</h4>
         <ul>
             <ui:repeat value="#{profile.user_Allergies}" var="value">
-                <li>#{value.intValue()}</li>
+                <li>#{value.get_type()}</li>
                 <h:form>
-                   
+                    <h:commandButton value="Remove" action="#{profile.remove_allergies(value)}"/>
                 </h:form>
-               
+
             </ui:repeat>
         </ul>
         <h:form>
-            
+
             <h:selectOneRadio value="#{profile.allergy}">
                 <f:selectItem itemValue="1" itemLabel="Plátanos" />
                 <f:selectItem itemValue="2" itemLabel="Gramíneas" />
                 <f:selectItem itemValue="3" itemLabel="Oliveira" />
                 <f:selectItem itemValue="4" itemLabel="Azinheira" />
             </h:selectOneRadio>
-            <h:commandButton value="Add allergie" action="#{profile.add_allergies}"/>
+            <h:commandButton value="Add allergy" action="#{profile.add_allergies}"/>
 
         </h:form>
-        
+
 
         <h4>User Locations</h4>
         <ul>
             <ui:repeat value="#{profile.user_Locations}" var="value">
                 <ul>
-                     <li> #{value.get_lat()} </li>
-                     <li> #{value.get_long()} </li>
-                     <li> #{value.get_type()} </li>
+                    <li> #{value.get_lat()} </li>
+                    <li> #{value.get_long()} </li>
+                    <li> #{value.get_type()} </li>
                 </ul>
                 <h:form>
                     <h:commandButton value="Remove" action="#{profile.remove_location(value.get_id())}"/>
                 </h:form>
-               
+                <h:form>
+                    <h:inputText id="flong" value="#{profile.up_lng}"
+                                 required="true" requiredMessage="Please enter longitude"/>
+                    <h:inputText id="flat" value="#{profile.up_lat}"
+                                 required="true" requiredMessage="Please enter latitude"/>
+
+                    <h:selectOneRadio value="#{profile.up_polen_type}">
+                        <f:selectItem itemValue="1" itemLabel="Plátanos" />
+                        <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                        <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                        <f:selectItem itemValue="4" itemLabel="Azinheira" />
+                    </h:selectOneRadio>
+                    <h:commandButton value="Edit" action="#{profile.update_location(value.get_id())}"/>
+                </h:form>
+            </ui:repeat>
+        </ul>
+
+        <h4>Get walk riks</h4>
+        <h:form>
+            <h:inputText id="wlong" value="#{profile.risk_lng}"
+                         required="true" requiredMessage="Please enter longitude"/>
+            <h:inputText id="wlat" value="#{profile.risk_lat}"
+                         required="true" requiredMessage="Please enter latitude"/>
+            <h:commandButton value="Get Risk" action="#{profile.get_risk}"/>
+        </h:form>
+        
+        <ul>
+            <ui:repeat value="#{profile.risk_Locations}" var="value">
+                <ul>
+                    <li> #{value.get_lat()} </li>
+                    <li> #{value.get_long()} </li>
+                    <li> #{value.get_type()} </li>
+                </ul>
             </ui:repeat>
         </ul>
 

@@ -39,7 +39,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaManager, java.io.Serializable {
 
-    private final float earth_radius = 6371000;
+    
 
     private String address;
 
@@ -96,26 +96,7 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
         return this.port;
     }
 
-    public double haversine(double longA, double latA, double longB, double latB) {
-
-        double longRadA = to_radian(longA);
-        double longRadB = to_radian(longB);
-        double latRadA = to_radian(latA);
-        double latRadB = to_radian(latB);
-
-        double havLat = Math.pow(Math.sin((latRadA - latRadB) / 2), 2);
-        double havLong = Math.pow(Math.sin((longRadA - longRadB) / 2), 2);
-
-        double square = Math.sqrt(havLat + Math.cos(latA) * Math.cos(latB) * havLong);
-
-        return 2 * earth_radius * Math.asin(square);
-    }
-
-    public double to_radian(double x) {
-
-        return x * (Math.PI / 180);
-    }
-
+    
     public ServiceManager get_service() {
 
         return this.sm;
