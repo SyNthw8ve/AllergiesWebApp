@@ -28,6 +28,29 @@
             <h:commandButton value="Submit" action="#{profile.add_location}"/>
 
         </h:form>
+        
+        <h4>User Allergies</h4>
+        <ul>
+            <ui:repeat value="#{profile.user_Allergies}" var="value">
+                <li>#{value.intValue()}</li>
+                <h:form>
+                   
+                </h:form>
+               
+            </ui:repeat>
+        </ul>
+        <h:form>
+            
+            <h:selectOneRadio value="#{profile.allergy}">
+                <f:selectItem itemValue="1" itemLabel="Plátanos" />
+                <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                <f:selectItem itemValue="4" itemLabel="Azinheira" />
+            </h:selectOneRadio>
+            <h:commandButton value="Add allergie" action="#{profile.add_allergies}"/>
+
+        </h:form>
+        
 
         <h4>User Locations</h4>
         <ul>

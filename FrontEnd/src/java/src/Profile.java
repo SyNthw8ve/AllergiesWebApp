@@ -6,14 +6,17 @@
 
 package src;
 
+import backend.Allergy;
 import backend.Location;
 import backend.Locations;
+import backend.NewLocation;
 import backend.ReplicaManager;
 import backend.User;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -41,6 +44,7 @@ public class Profile {
      * Creates a new instance of Profile
      */
     String username = "";
+    int allergy = 1;
     User user;
     int polen_type = 1;
     float lng;
@@ -89,6 +93,21 @@ public class Profile {
     public List<Location> getUser_Locations() {
         
         return this.user_locations;
+    }
+    
+    public List<Integer> getUser_Allergies() {
+        
+        return this.user.get_polen();
+    }
+    
+    public int getAllergy() {
+        
+        return this.allergy;
+    }
+    
+    public void setAllergy(int allergy) {
+        
+        this.allergy = allergy;
     }
     
     @PostConstruct
@@ -140,15 +159,16 @@ public class Profile {
         
         try {
             
-            Location l = new Location(this.lng, this.lat, this.polen_type, -1);
-        
+            Date date = new Date();
+            
+            NewLocation l = new NewLocation(this.lng, this.lat, this.polen_type, this.user.get_id(), date.getTime());
             String uri = this.get_replica_location();
 
             Client client = ClientBuilder.newClient();
 
-            WebTarget webTarget = client.target(uri).path("location").queryParam("id", this.user.get_id());
+            WebTarget webTarget = client.target(uri).path("location");
 
-            webTarget.request(MediaType.APPLICATION_XML).put(Entity.entity(l, MediaType.APPLICATION_XML));
+            webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(l, MediaType.APPLICATION_XML));
         }
         
         catch(Exception e) {
@@ -183,5 +203,27 @@ public class Profile {
         
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+    }
+    
+    public void add_allergies() {
+        
+        try {
+            
+           
+            String uri = this.get_replica_location();
+
+            Client client = ClientBuilder.newClient();
+
+            WebTarget webTarget = client.target(uri).path("allergies");
+
+            Allergy new_allergy = new Allergy(this.user.get_id(), this.allergy);
+            
+            webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(new_allergy, MediaType.APPLICATION_XML));
+        }
+        
+        catch(Exception e) {
+            
+            System.out.println(e.toString());
+        }
     }
 }

@@ -73,73 +73,6 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
     }
 
     @Override
-    public void add_location(User u, Location p) throws RemoteException {
-
-        try {
-
-            Statement state = this.pc.getStatement();
-            Date date = new Date();
-
-            String query = "INSERT INTO polen (polen_type, long, lat, user_id, date) VALUES (" + p.get_type() + "," + p.get_long() + ","
-                    + p.get_lat() + "," + u.id + "," + date.getTime() + ");";
-
-            state.executeUpdate(query);
-
-        } catch (SQLException ex) {
-
-            Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public void remove_location(User u, int id) throws RemoteException {
-
-        try {
-
-            Statement state = this.pc.getStatement();
-
-            String query = "DELETE FROM polen WHERE id = " + id + " AND user_id = " + u.id + ";";
-
-            state.executeUpdate(query);
-            
-
-        } catch (SQLException ex) {
-
-            Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public Vector<Location> get_user_locations(User u) throws RemoteException {
-
-        Vector<Location> locations = new Vector<>();
-
-        try {
-
-            Statement state = this.pc.getStatement();
-
-            String query = "SELECT polen_type, long, lat FROM polen WHERE user_id =" + u.id + ";";
-
-            ResultSet set = state.executeQuery(query);
-
-            while (set.next()) {
-
-                //locations.add(new Location(set.getFloat("long"), set.getFloat("lat"), set.getInt("type")));
-
-            }
-
-            set.close();
-            
-
-        } catch (SQLException ex) {
-
-            Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return locations;
-    }
-
-    @Override
     public void promote() throws RemoteException {
 
         this.is_primary = true;
@@ -270,8 +203,6 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
                 checkTables("localhost", "l38489", "l38489", "1234");
 
-                //pc.connect();
-
                 ReplicaManagerImp replica = new ReplicaManagerImp(args[0], port, sm, pc);
 
                 sm.add_replica(replica);
@@ -286,7 +217,6 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
                 httpServer.stop();
 
-                //pc.disconnect();
 
             } catch (Exception e) {
 
@@ -347,7 +277,7 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
                 System.out.println("Tabela polen não encontrada. A criar...");
                 String query = "create table polen(id serial primary key, polen_type integer, long float, lat float, user_id integer "
-                        + "references users (id) on delete cascade, data date);";
+                        + "references users (id) on delete cascade, data bigint);";
 
                 state.executeUpdate(query);
 

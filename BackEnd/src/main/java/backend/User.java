@@ -6,6 +6,7 @@
 
 package backend;
 
+import java.util.List;
 import java.util.Vector;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,17 +19,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class User implements java.io.Serializable {
     
     @XmlElement(required = true)
-    int id;
+    private int id;
     @XmlElement(required = true)
     private String username;
     @XmlElement(required = true)
-    private Vector<Integer> polen;
+    private List<Integer> polen;
     @XmlElement(required = true)
     private String password;
     
     public User() {}
     
-    public User(String username, String password, Vector<Integer> polen, int id) {
+    public User(String username, String password, List<Integer> polen, int id) {
         
         this.username = username;
         this.password = password;
@@ -46,9 +47,19 @@ public class User implements java.io.Serializable {
         return this.password;
     }
     
-    public Vector<Integer> get_polen() {
+    public List<Integer> get_polen() {
         
         return this.polen;
+    }
+    
+    public int get_id() {
+        
+        return this.id;
+    }
+    
+    public void set_id(int id) {
+        
+        this.id = id;
     }
     
 }

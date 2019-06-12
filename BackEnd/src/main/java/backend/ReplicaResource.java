@@ -9,10 +9,10 @@ import com.sun.jersey.spi.resource.Singleton;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
@@ -21,7 +21,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -104,8 +103,21 @@ public class ReplicaResource {
             ResultSet set = state.executeQuery(query);
             
             set.next();
+            
+            int user_id = set.getInt("id");
+            String username_db = set.getString("username");
+            LinkedList<Integer> allergies = new LinkedList<>();
+            
+            query = "SELECT type FROM allergies WHERE user_id = " + user_id + ";";
+            
+            set = state.executeQuery(query);
+            
+            while(set.next()) {
+                
+                allergies.add(set.getInt("type"));
+            }
 
-            user = new User(set.getString("username"), "", null, set.getInt("id"));
+            user = new User(username_db, "", allergies, user_id);
             
 
         } catch (SQLException ex) {
@@ -130,22 +142,14 @@ public class ReplicaResource {
             ResultSet set = state.executeQuery(query);
 
             set.next();
-
-            u.id = set.getInt(1);
+           
+            u.set_id(set.getInt(1));
             
-            query = "INSERT INTO user_roles(user_id, username, role) VALUES (" + u.id + ",'" + u.get_username() +"', 'user');";
+            query = "INSERT INTO user_roles(user_id, username, role) VALUES (" + u.get_id() + ",'" + u.get_username() +"', 'user');";
             state.execute(query);
             
             set.close();
 
-            /*for (int polen : u.get_polen()) {
-
-                query = "INSERT INTO allergies (user_id, type) VALUES (" + u.id + "," + polen + ");";
-
-                state.execute(query);
-            }*/
-
-            
 
         } catch (SQLException ex) {
 
@@ -157,20 +161,19 @@ public class ReplicaResource {
     }
 
     @Path("/location")
-    @PUT
+    @POST
     @Consumes({"application/json", "application/xml"})
-    public synchronized void add_location(Location l, @QueryParam("id") int id) throws Exception {
+    public synchronized void add_location(NewLocation l) throws Exception {
         System.out.println("Adding location1");
         try {
-
+            
+            
             Statement state = pc.getStatement();
 
-            Date date = new Date();
-
-            String query = "INSERT INTO polen (polen_type, long, lat, user_id, date) VALUES (" + l.get_type() + "," + l.get_long() + ","
-                    + l.get_lat() + "," + id + "," + date.getTime() + ");";
+            String query = "INSERT INTO polen (polen_type, long, lat, user_id, data) VALUES (" + l.get_type() + "," + l.get_lng() + ","
+                    + l.get_lat() + "," + l.get_user_id() + "," + l.get_date() + ");";
             
-            state.executeQuery(query);
+            state.execute(query);
             
         } catch (SQLException ex) {
 
@@ -235,5 +238,24 @@ public class ReplicaResource {
         
         return new Locations(locations);
     }
+    
+    @POST
+    @Path("/allergies")
+    @Consumes({"application/json", "application/xml"})
+    public synchronized void add_allergy(Allergy allergy) throws Exception {
+        
+        try {
+            Statement state = pc.getStatement();
 
+            String query = "INSERT INTO allergies (user_id, type) VALUES (" + allergy.get_id() + "," + allergy.get_type() + ");";
+
+            state.execute(query);
+
+        } catch (SQLException ex) {
+            
+            Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("Adding allergy");
+    }
 }
