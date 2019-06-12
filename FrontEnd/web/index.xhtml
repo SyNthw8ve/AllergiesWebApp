@@ -1,58 +1,74 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Map Allergies</title>
-        
+
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
-        
+
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-   crossorigin=""/>
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
         <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
-   crossorigin=""></script>
+                integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
         <h:outputStylesheet library="css" name="index.css" />
     </h:head>
     <h:body>
-        
+
         <div>
             <nav>
-            
-            <ul>
-                <li><a href="index.xhtml">Home</a></li>
-                <li><a href="signin.xhtml">Sign In</a></li>
-                <li><a href="signup.xhtml">Sign Up</a></li>
-            </ul>
-        </nav>
-        
-        <h2 id="nav-title">MapAllergies</h2>
+
+                <ul>
+                    <li><a href="index.xhtml">Home</a></li>
+                    <li><a href="profile.xhtml">Sign In</a></li>
+                    <li><a href="signup.xhtml">Sign Up</a></li>
+                </ul>
+            </nav>
+
+            <h2 id="nav-title">MapAllergies</h2>
         </div>
-        
+
         <div class="container">
-            
+
             <div class="grid">
-                
+
                 <div class="grid inner-grid">
-                    
+
                     <h4>Map Allergies</h4>
-                    
+
                     <div id="main-text">
-                        
+
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed fermentum arcu. Ut a ornare sem.
                         Aenean rutrum varius ipsum, ut gravida dolor suscipit sed. Sed et convallis dui, a volutpat orci.
                         Nulla gravida metus nec pharetra pellentesque. Nulla ac nisl orci. Praesent eu leo mollis, maximus dolor
                         at, gravida ex. Nulla facilisi. Aliquam cursus ullamcorper nisi vitae auctor.
-                        
+
                     </div>
- 
-                    <a class="click" id="signin" href="signin.xhtml">Sign In</a>
+
+                    <a class="click" id="signin" href="profile.xhtml">Sign In</a>
                     <a class="click" id="signup" href="signup.xhtml">Sign Up</a>
 
                 </div>
+
+                <div id="mapid" data="#{home.to_Js()}"></div>
                 
-                <div id="mapid"></div>
+                <form id="filter">
+                    <label for="pla">Plátano</label>
+                    <input id="pla" class="check" type="checkbox" name="Plátano" value="1"/>
+                    
+                    <label for="gra">Gramíneas</label>
+                    <input id="gra" class="check" type="checkbox" name="Gramíneas" value="2"/>
+                    
+                    <label for="oli">Oliveira</label>
+                    <input id="oli" class="check" type="checkbox" name="Oliveira" value="3"/>
+                    
+                    <label for="azi">Azinheira</label>
+                    <input id="azi" class="check" type="checkbox" name="Azinheira" value="4"/>
+                </form>
+
             </div>
         </div>
         <script src="./resources/js/map.js"></script>

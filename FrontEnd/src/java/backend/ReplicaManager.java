@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package src;
+package backend;
 
 import java.rmi.RemoteException;
 import java.util.Date;

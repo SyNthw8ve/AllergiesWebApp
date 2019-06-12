@@ -35,26 +35,20 @@
     <div class="container">
         <f:view>
         <h:form id="registerForm">
-            <table>
-                <tr>
-                    <td><h:outputText value="Username:" /></td>
-                    <td><h:inputText id="fname" value="#{signup.username}"
-                            required="true"/></td>
-                    <td><h:message for="fname" style="color:red"/></td>
-                </tr>
-
-                <tr>
-                    <td><h:outputText value="Enter Password :" /></td>
-                    <td><h:inputSecret id="psw" value="#{signup.password}"
-                            required="true" requiredMessage="Please enter your password" /></td>
-                    <td><h:message for="psw" style="color:red" /></td>
-                </tr>
-                <tr>
-                    <td />
-                    <td><h:commandButton value="Registar" action="#{signup.add}" /></td>
-                </tr>
+            <h:outputText value="Username:" />
+                    <h:inputText id="fname" value="#{signup.username}"
+                            required="true" requiredMessage="Please enter your username"/>
+                    <h:message for="fname" style="color:red"/>
                 
-            </table>
+
+                
+                    <h:outputText value="Enter Password :" />
+                    <h:inputSecret id="psw" value="#{signup.password}"
+                            required="true" requiredMessage="Please enter your password" />
+                    <h:message for="psw" style="color:red" />
+                
+                    <h:commandButton value="Registar" action="#{signup.add}" />
+                
         </h:form>
     </f:view>
         

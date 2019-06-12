@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package src;
+package backend;
 
 import java.util.Vector;
 import javax.xml.bind.annotation.XmlElement;
@@ -49,6 +49,11 @@ public class User implements java.io.Serializable {
     public Vector<Integer> get_polen() {
         
         return this.polen;
+    }
+    
+    public int get_id() {
+        
+        return this.id;
     }
     
 }
