@@ -9,6 +9,11 @@
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
               integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
               crossorigin=""/>
@@ -19,45 +24,49 @@
     </h:head>
     <h:body>
 
-        <div>
-            <nav>
-                <ul>
+        <nav>
+            <div class="nav-wrapper  green accent-3">
+                <a href="index.xhtml" class="brand-logo">MapAllergies</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a href="index.xhtml">Home</a></li>
-                    <!--<a class="click" id="signin" href="signin.xhtml">Sign In</a>-->
+                    <li><a href="profile.xhtml">Sign In</a></li>
                     <li><a href="signup.xhtml">Sign Up</a></li>
                 </ul>
-            </nav>
-
-            <h2 id="nav-title">MapAllergies</h2>
-        </div>
-
-        <div class="container">
-            <h3>Sign In</h3>
-            
-            <form id="loginForm" method="POST" action="j_security_check">
-                <input type="text" name="j_username"/>
-                <input type="password" name="j_password"/>
-                <input type="submit" value="Go" />
+            </div>
+        </nav>
+        
+        <div class="valign-wrapper row center-align container" id="main">
+            <form class="col m12 l12" id="loginForm" method="POST" action="j_security_check">
+                <div class="card-panel white">
+                    <h4>Sign In</h4>
+      
+                <div class="row">
+                    <div class="input-field">
+                        <i class="material-icons prefix" >person</i>
+                        <input id="icon_prefix" type="text" class="validate" name="j_username" required="true"/>
+                        <label for="icon_prefix">Username</label>
+                        <span class="helper-text" data-error="Username field is required"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field">
+                        <i class="material-icons prefix">lock</i>
+                        <input id="icon_telephone" type="password" class="validate" name="j_password" required="true"/>
+                        <label for="icon_telephone">Password</label>
+                        <span class="helper-text" data-error="Password field is required"></span>
+                        <span class="helper-text left-align">Forgot Password</span>
+                    </div>
+                </div>
+                    <div class="row">
+                        <span>Not a user? <a href="signup.xhtml">Sign Up</a></span>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Sign In
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
             </form>
-                    
-                    <!--<label for="inputName">Username</label>
-                    <h:inputText id="inputName" value="#{signin.username}"
-                                 required="true" requiredMessage="Name field must not be empty" />
-
-                    <h:message for="inputName" style="color:red" />
-
-                    <label for="inputPassword">Password</label>
-                    <h:inputSecret id="inputPassword" value="#{signin.password}"
-                                   required="true"
-                                   requiredMessage="Password field must not be empty" />
-                    <h:message for="inputPassword" style="color:red" />
-                    <h:button value="Sign In" onclick=""> </h:button>
-                
-                    <p>Not a User? <a href="signup.xhtml">Sign Up</a></p>-->
-                    
-               
-            
         </div>
-        <script src="./resources/js/map.js"></script>
+
+        
     </h:body>
 </html>

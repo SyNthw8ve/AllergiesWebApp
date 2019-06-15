@@ -1,0 +1,40 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 14/jun/2019, 23:30:29
+    Author     : nuno1
+*/
+
+.logout {
+    
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.addform {
+    
+    width: 50%;
+    margin: auto;
+}
+
+h4 {
+    
+    font-family: 'Dancing Script';
+    font-size: 40px;
+    margin-bottom: 50px;
+    margin-left: 20px;
+}
+
+#mapid { 
+    
+    margin: 30px auto;
+    width: 90%;
+    height: 500px;
+    
+    border-radius: 20px;
+}
+

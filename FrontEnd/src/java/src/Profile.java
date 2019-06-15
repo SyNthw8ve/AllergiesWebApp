@@ -217,11 +217,6 @@ public class Profile {
     
     public void add_location() {
         
-        System.out.println(this.lat);
-        System.out.println(this.lng);
-        System.out.println(this.polen_type);
-        System.out.println(this.user.get_id());
-        
         try {
             
             Date date = new Date();

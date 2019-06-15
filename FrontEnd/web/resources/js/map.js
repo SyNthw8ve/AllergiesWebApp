@@ -70,14 +70,3 @@ function add_locations() {
     }
 }
 
-
-
-function onMapClick(e) {
-
-    console.log(e.latlng);
-
-    //L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
-}
-
-mymap.on('click', onMapClick);
-

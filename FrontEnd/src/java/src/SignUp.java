@@ -66,6 +66,7 @@ public class SignUp {
         
         try {
             
+            
             ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + "localhost" + ":"
                     + 9000 + "/primary");
             

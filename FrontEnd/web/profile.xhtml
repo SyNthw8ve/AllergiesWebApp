@@ -6,99 +6,180 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Facelet Title</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
+        
+         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+                integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+        <h:outputStylesheet library="css" name="profile.css" />
     </h:head>
     <h:body>
-        Hello from Facelets
-        <h:outputText value="#{profile.username}"/>
-        <h:form>
-            <h:commandButton value="Logout"  action="#{profile.logout()}"/>
-        </h:form>
-        <h:form>
-            <h:inputText id="flong" value="#{profile.lng}"
-                         required="true" requiredMessage="Please enter longitude"/>
-            <h:inputText id="flat" value="#{profile.lat}"
-                         required="true" requiredMessage="Please enter latitude"/>
 
-            <h:selectOneRadio value="#{profile.polen_type}">
-                <f:selectItem itemValue="1" itemLabel="Plátanos" />
-                <f:selectItem itemValue="2" itemLabel="Gramíneas" />
-                <f:selectItem itemValue="3" itemLabel="Oliveira" />
-                <f:selectItem itemValue="4" itemLabel="Azinheira" />
-            </h:selectOneRadio>
-            <h:commandButton value="Submit" action="#{profile.add_location}"/>
+        <div class="row">
+            <div class="col m3 ">
+                <ul id="slide-out" class="sidenav sidenav-fixed green accent-3">
+                    <li><div class="user-view">
+                            <a><span class="white-text name">#{profile.username}</span></a>
+                            <div class="chip">
+                                Plátano
+                            </div>
+                            <div class="chip">
+                                Oliveira
+                            </div>
+                            <div class="chip">
+                                Gramídeas
+                            </div>
+                            <div class="chip">
+                                Azinheira
+                            </div>
+                        </div></li>
+                    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+                    <li><a href="#!">Second Link</a></li>
+                    <li><div class="divider"></div></li>
+                    <li><a class="subheader">Actions</a></li>
+                    <li><a class="waves-effect " href="#!">Third Link With Waves</a></li>
+                    <li><a href="#addlocations" class="white-text"><i class="material-icons">add_location</i>Add locations</a></li>
+                    <li><a href="#editlocations" class="white-text"><i class="material-icons">edit_location</i>Edit locations</a></li>
+                    <li><a><i class="material-icons">power_settings_new</i><h:form>
+                                <h:commandButton styleClass="logout"  value="LogOut" action="#{profile.logout()}"/>
+                            </h:form></a></li>
+                </ul>
+            </div>
 
-        </h:form>
+            <div class="col m9">
+                <div id="addlocations" class="row section scrollspy">
+                    <h4>Add New Location</h4>
+                    
+                    <div id="mapid" ></div>
+                    
+                    <form class="addform center-align">
+                        <div class="row">
+                            <div class="input-field">
+                                <i class="material-icons prefix">place</i>
+                                <input type="text" class="validate" id="long" value="#{profile.lng}"
+                                       required="true"/>
+                                <label for="icon_prefix">Longitude</label>
+                                <span class="helper-text" data-error="Longitude field is required"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field">
+                                <i class="material-icons prefix">place</i>
+                                <input type="text" class="validate" id="lat" value="#{profile.lat}"
+                                       required="true"/>
+                                <label for="icon_prefix">Latitude</label>
+                                <span class="helper-text" data-error="Latitude field is required"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h:form>
+                                <div class="input-field col s12">
+                                    <h:selectOneMenu>
+                                        <f:selectItem itemValue="1" itemLabel="Plátano" />
+                                        <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                                        <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                                        <f:selectItem itemValue="4" itemLabel="Azinheira" />
+                                    </h:selectOneMenu>
+                                    <label>Polen Type</label>
+                                </div>
+                            </h:form>
+                        </div>
+                        <div class="row">
+                            <h:form styleClass="center-align">
+                                <h:commandButton value="Add Location" action="#{profile.add_location}" styleClass="waves-effect waves-light btn-large text-white"/>
+                            </h:form>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="editlocations" class="row section scrollspy"></div>
 
-        <h4>User Allergies</h4>
-        <ul>
-            <ui:repeat value="#{profile.user_Allergies}" var="value">
-                <li>#{value.get_type()}</li>
-                <h:form>
-                    <h:commandButton value="Remove" action="#{profile.remove_allergies(value)}"/>
-                </h:form>
 
-            </ui:repeat>
-        </ul>
-        <h:form>
-
-            <h:selectOneRadio value="#{profile.allergy}">
-                <f:selectItem itemValue="1" itemLabel="Plátanos" />
-                <f:selectItem itemValue="2" itemLabel="Gramíneas" />
-                <f:selectItem itemValue="3" itemLabel="Oliveira" />
-                <f:selectItem itemValue="4" itemLabel="Azinheira" />
-            </h:selectOneRadio>
-            <h:commandButton value="Add allergy" action="#{profile.add_allergies}"/>
-
-        </h:form>
-
-
-        <h4>User Locations</h4>
-        <ul>
-            <ui:repeat value="#{profile.user_Locations}" var="value">
+                <h4>User Allergies</h4>
                 <ul>
-                    <li> #{value.get_lat()} </li>
-                    <li> #{value.get_long()} </li>
-                    <li> #{value.get_type()} </li>
+                    <ui:repeat value="#{profile.user_Allergies}" var="value">
+                        <li>#{value.get_type()}</li>
+                        <h:form>
+                            <h:commandButton value="Remove" action="#{profile.remove_allergies(value)}"/>
+                        </h:form>
+
+                    </ui:repeat>
                 </ul>
                 <h:form>
-                    <h:commandButton value="Remove" action="#{profile.remove_location(value.get_id())}"/>
-                </h:form>
-                <h:form>
-                    <h:inputText id="flong" value="#{profile.up_lng}"
-                                 required="true" requiredMessage="Please enter longitude"/>
-                    <h:inputText id="flat" value="#{profile.up_lat}"
-                                 required="true" requiredMessage="Please enter latitude"/>
 
-                    <h:selectOneRadio value="#{profile.up_polen_type}">
+                    <h:selectOneRadio value="#{profile.allergy}">
                         <f:selectItem itemValue="1" itemLabel="Plátanos" />
                         <f:selectItem itemValue="2" itemLabel="Gramíneas" />
                         <f:selectItem itemValue="3" itemLabel="Oliveira" />
                         <f:selectItem itemValue="4" itemLabel="Azinheira" />
                     </h:selectOneRadio>
-                    <h:commandButton value="Edit" action="#{profile.update_location(value.get_id())}"/>
+                    <h:commandButton value="Add allergy" action="#{profile.add_allergies}"/>
+
                 </h:form>
-            </ui:repeat>
-        </ul>
 
-        <h4>Get walk riks</h4>
-        <h:form>
-            <h:inputText id="wlong" value="#{profile.risk_lng}"
-                         required="true" requiredMessage="Please enter longitude"/>
-            <h:inputText id="wlat" value="#{profile.risk_lat}"
-                         required="true" requiredMessage="Please enter latitude"/>
-            <h:commandButton value="Get Risk" action="#{profile.get_risk}"/>
-        </h:form>
-        
-        <ul>
-            <ui:repeat value="#{profile.risk_Locations}" var="value">
+
+                <h4>User Locations</h4>
                 <ul>
-                    <li> #{value.get_lat()} </li>
-                    <li> #{value.get_long()} </li>
-                    <li> #{value.get_type()} </li>
-                </ul>
-            </ui:repeat>
-        </ul>
+                    <ui:repeat value="#{profile.user_Locations}" var="value">
+                        <ul>
+                            <li> #{value.get_lat()} </li>
+                            <li> #{value.get_long()} </li>
+                            <li> #{value.get_type()} </li>
+                        </ul>
+                        <h:form>
+                            <h:commandButton value="Remove" action="#{profile.remove_location(value.get_id())}"/>
+                        </h:form>
+                        <h:form>
+                            <h:inputText id="flong" value="#{profile.up_lng}"
+                                         required="true" requiredMessage="Please enter longitude"/>
+                            <h:inputText id="flat" value="#{profile.up_lat}"
+                                         required="true" requiredMessage="Please enter latitude"/>
 
+                            <h:selectOneRadio value="#{profile.up_polen_type}">
+                                <f:selectItem itemValue="1" itemLabel="Plátanos" />
+                                <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                                <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                                <f:selectItem itemValue="4" itemLabel="Azinheira" />
+                            </h:selectOneRadio>
+                            <h:commandButton value="Edit" action="#{profile.update_location(value.get_id())}"/>
+                        </h:form>
+                    </ui:repeat>
+                </ul>
+
+                <h4>Get walk riks</h4>
+                <h:form>
+                    <h:inputText id="wlong" value="#{profile.risk_lng}"
+                                 required="true" requiredMessage="Please enter longitude"/>
+                    <h:inputText id="wlat" value="#{profile.risk_lat}"
+                                 required="true" requiredMessage="Please enter latitude"/>
+                    <h:commandButton value="Get Risk" action="#{profile.get_risk}"/>
+                </h:form>
+
+                <ul>
+                    <ui:repeat value="#{profile.risk_Locations}" var="value">
+                        <ul>
+                            <li> #{value.get_lat()} </li>
+                            <li> #{value.get_long()} </li>
+                            <li> #{value.get_type()} </li>
+                        </ul>
+                    </ui:repeat>
+                </ul>
+            </div>
+        </div>
+
+
+        <script src="./resources/js/mapprofile.js"></script>
+        <script src="./resources/js/profilenav.js"></script>
     </h:body>
 </html>
 

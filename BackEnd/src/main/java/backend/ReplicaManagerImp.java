@@ -170,19 +170,24 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
         String regHost = "localhost";
         int regPort = 9000;
 
-        if (args.length == 2) {
+        if (args.length == 6) {
 
             try {
                 String address = args[0];
                 int port = Integer.parseInt(args[1]);
+                
+                String db_host = args[2];
+                String db = args[3];
+                String user = args[4];
+                String password = args[5];
 
                 ServiceManager sm = (ServiceManager) java.rmi.Naming.lookup("rmi://" + regHost + ":"
                         + regPort + "/service");
 
-                PostgresConnector pc = new PostgresConnector("localhost", "l38489", "l38489", "1234");
-                DataObject data = new DataObject("localhost", "l38489", "l38489", "1234");
+                PostgresConnector pc = new PostgresConnector(db_host, db, user, password);
+                DataObject data = new DataObject(db_host, db, user, password);
 
-                checkTables("localhost", "l38489", "l38489", "1234");
+                checkTables(db_host, db, user, password);
 
                 ReplicaManagerImp replica = new ReplicaManagerImp(args[0], port, sm, pc);
 

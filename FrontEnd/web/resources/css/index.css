@@ -7,92 +7,57 @@ and open the template in the editor.
     Created on : 1/jun/2019, 16:27:26
     Author     : nuno1
 */
-body {
-    
-   
-}
 
-.container {
-    
-    margin: 5%;
-}
-
-.grid {
-    
-    display: grid;
-    margin: 1%;
-    
-    justify-items: center;
-    
-    grid-template-columns: 50% 50%;
-    grid-auto-rows: auto;
-    
-    grid-column-gap: 30px;
-    grid-row-gap: 30px;
-}
-nav {
-    
-    float: right;
-}
-
-#nav-title {
+a.brand-logo {
     
     font-family: 'Dancing Script';
-    margin-left: 15px;
+    margin-left: 20px;
 }
 
-nav ul {
+h4 {
     
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    
-    font-size: 18px;
-    font-family: 'Roboto';
+    font-family: 'Dancing Script';
+    font-size: 50px;
 }
 
-nav li {
+a.btn-large {
     
-    display: inline-block;
-    margin-right: 30px;
-    padding-top: 10px;
-    padding-bottom: 2px;
-    
-    cursor: pointer;
-}
-
-nav li:hover {
-    
-    border-bottom: 3px solid #70EBFF;
-}
-
-nav a {
-    
-    text-decoration: none;
-    color: #000000;
+    border-radius: 40px;
+    width: 200px;
+    height: 60px;
 }
 
 #mapid { 
     
-    grid-column: 2 / 3;
+    margin: 30px auto;
+    width: 100%;
+    height: 500px;
     
-    width: 80%;
-    height: 400px;
+    border-radius: 20px;
 }
 
-#main-text {
+#main-display {
     
-    grid-column: 1 /3;
-    grid-row: 2;
-    text-align: left;
-    font-size: 18px;
-    
-    font-family: 'Roboto';
-    
-    margin-top: 20px;
-    margin-bottom: 10px;
+    //background-image: linear-gradient(to left top, #29d998, #28df98, #29e698, #2bec98, #2ef297);
+    padding-top: 30px;
 }
 
+#filter p{
+    
+    width: 100%;
+    margin-left: 0px;
+}
+
+#filter label {
+    
+    margin-right: 20px;
+}
+
+#filter {
+    
+    margin: 0 auto;
+}
+/*
 .grid h4 {
     
     grid-column: 1 /3;
@@ -144,4 +109,4 @@ nav a {
     
     background-image: linear-gradient(to top, #8d70ff, #66b4e8);
     color: white;
-}
+}*/
