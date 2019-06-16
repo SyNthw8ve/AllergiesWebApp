@@ -6,6 +6,8 @@
 
 package backend;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,23 +15,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author nuno1
  */
-@XmlRootElement(name = "allergy")
-public class Allergy implements java.io.Serializable {
+@XmlAccessorType(XmlAccessType.FIELD)
+
+@XmlRootElement(name = "delete")
+public class DeleteLocation {
     
     @XmlElement(required = true)
     private int id;
-    @XmlElement(required = true)
-    private int type;
     
-    public Allergy() {
+    @XmlElement(required = true)
+    private int user_id;
+    
+    public DeleteLocation() {
         
         
     }
     
-    public Allergy (int id, int type) {
+    public DeleteLocation(int id, int user_id) {
         
         this.id = id;
-        this.type = type;
+        this.user_id = user_id;
     }
     
     public int get_id() {
@@ -37,8 +42,9 @@ public class Allergy implements java.io.Serializable {
         return this.id;
     }
     
-    public int get_type() {
+    public int get_user_id() {
         
-        return this.type;
+        return this.user_id;
     }
+    
 }

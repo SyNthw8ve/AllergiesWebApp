@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package backend;
+package data;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,8 +13,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author nuno1
  */
-@XmlRootElement(name = "new_location")
-public class NewLocation implements java.io.Serializable {
+@XmlRootElement(name = "location")
+public class Location implements java.io.Serializable {
+    
+    @XmlElement(required = true)
+    private int type;
     
     @XmlElement(required = true)
     private float lng;
@@ -23,29 +26,26 @@ public class NewLocation implements java.io.Serializable {
     private float lat;
     
     @XmlElement(required = true)
-    private int type;
+    private int id;
     
     @XmlElement(required = true)
-    private int user_id;
+    private int request_id;
     
-    @XmlElement(required = true)
-    private long date;
-    
-    public NewLocation() {
+    public Location() {
         
         
     }
     
-    public NewLocation(float lng, float lat, int type, int user_id, long date) {
+    public Location(float lng, float lat, int type, int id, int request_id) {
         
         this.lng = lng;
-        this.lat = lat;
+        this.lat= lat;
         this.type = type;
-        this.user_id = user_id;
-        this.date = date;
+        this.id = id;
+        this.request_id = request_id;
     }
     
-    public float get_lng() {
+    public float get_long() {
         
         return this.lng;
     }
@@ -60,14 +60,13 @@ public class NewLocation implements java.io.Serializable {
         return this.type;
     }
     
-    public int get_user_id() {
+    public int get_id() {
         
-        return this.user_id;
+        return this.id;
     }
     
-    public long get_date() {
+    public int get_request_id() {
         
-        return this.date;
+        return this.request_id;
     }
-    
 }

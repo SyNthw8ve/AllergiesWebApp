@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Map Allergies</title>
 
@@ -17,45 +18,34 @@
     </h:head>
     <h:body>
 
-        <nav>
-            <div class="nav-wrapper  green accent-3">
-                <a href="index.xhtml" class="brand-logo">MapAllergies</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="index.xhtml">Home</a></li>
-                    <li><a href="profile.xhtml">Sign In</a></li>
-                    <li><a href="signup.xhtml">Sign Up</a></li>
-                </ul>
-            </div>
-        </nav>
+        <ui:include src="./navbar.xhtml" />
 
         <div class="valign-wrapper row center-align container" id="main">
 
-            <form id="registerForm" class="col m12 l12">
+            <h:form id="registerForm" styleClass="col m12 l12">
                 <div class="card-panel white">
                     <h4>Sign Up</h4>
 
                     <div class="row">
                         <div class="input-field">
                             <i class="material-icons prefix">person</i>
-                            <input type="text" class="validate" id="icon_prefix" value="#{signup.username}"
-                                   required="true"/>
-                            <label for="icon_prefix">Username</label>
+                            <h:inputText styleClass="validate" id="username" required="true" value="#{signup.username}"/>
+                            <label for="registerForm:username">Username</label>
                             <span class="helper-text" data-error="Username field is required"></span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field">
                             <i class="material-icons prefix">lock</i>
-                            <input type="password" class="validate" id="icon_telephone" value="#{signup.password}"
-                                   required="true"/>
-                            <label for="icon_telephone">Password</label>
+                            <h:inputSecret styleClass="validate" id="pass" value="#{signup.password}" required="true" />
+                            <label for="registerForm:pass">Password</label>
                             <span class="helper-text" data-error="Password field is required"></span>
                         </div>
                     </div>
                     <div class="row">
-                        <h:form>
+                       
                             <div class="input-field s12 m12 l12">
-                                <h:selectManyMenu>
+                                <h:selectManyMenu value="#{signup.allergies}">
                                     <f:selectItem itemValue="1" itemLabel="Plátano" />
                                     <f:selectItem itemValue="2" itemLabel="Gramíneas" />
                                     <f:selectItem itemValue="3" itemLabel="Oliveira" />
@@ -63,13 +53,13 @@
                                 </h:selectManyMenu>
                                 <label>Allergies</label>
                             </div>
-                        </h:form>
+                        
                     </div>
-                    <h:form>
+                    
                         <h:commandButton value="Sign Up" action="#{signup.add()}" styleClass="btn waves-effect waves-light" />
-                    </h:form>
+                    
                 </div>
-            </form>
+            </h:form>
         </div>
 
         <script src="./resources/js/signup.js"></script>

@@ -5,6 +5,9 @@
  */
 package backend;
 
+import data.DataObject;
+import data.Location;
+import data.User;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -216,7 +219,7 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
     }
 
-    public static void checkTables(String host, String user, String database, String psw) throws Exception {
+    public static void checkTables(String host, String database, String user, String psw) throws Exception {
 
         PostgresConnector pc = new PostgresConnector(host, database, user, psw);
 

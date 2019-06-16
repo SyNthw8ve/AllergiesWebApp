@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+                integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+        <h:outputStylesheet library="css" name="profile.css" />
+    </h:head>
+    <h:body>
+        <div class="row">
+            <div class="col m3 ">
+                <ui:include src="./sidebar.xhtml"/>
+            </div>
+
+            <div class="col m9">
+                <div id="addlocations" class="row section scrollspy">
+                    <h4>Add New Location</h4>
+
+                    <div id="mapid" ></div>
+
+                    <h:form id="addlocationsform" styleClass="addform center-align">
+                        <div class="row">
+                            <div class="input-field">
+                                <i class="material-icons prefix">place</i>
+                                <h:inputText styleClass="validate" id="long" value="#{profile.lng}"
+                                             required="true" valueChangeListener="#{profile.handleLongitudeChange}"/>
+                                <label for="long">Longitude</label>
+                                <span class="helper-text" data-error="Longitude field is required"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field">
+                                <i class="material-icons prefix">place</i>
+                                <h:inputText class="validate" id="lat" value="#{profile.lat}" 
+                                             required="true" valueChangeListener="#{profile.handleLatitudeChange}"/>
+                                <label for="lat">Latitude</label>
+                                <span class="helper-text" data-error="Latitude field is required"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="input-field col s12">
+                                <h:selectOneMenu id="polen"  value="#{profile.polen_type}" valueChangeListener="#{profile.choosePolenType}">
+                                    <f:selectItem itemValue="1" itemLabel="Plátano" />
+                                    <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                                    <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                                    <f:selectItem itemValue="4" itemLabel="Azinheira" />
+                                </h:selectOneMenu>
+
+                                <label>Polen Type</label>
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                            <h:commandButton value="Add Location" action="#{profile.add_location()}" styleClass="waves-effect waves-light btn-large text-white"/>
+
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+        
+        <script src="../resources/js/mapprofile.js"></script>
+        <script src="../resources/js/profilenav.js"></script>
+    </h:body>
+</html>
+

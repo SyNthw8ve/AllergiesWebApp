@@ -6,6 +6,7 @@
 
 package backend;
 
+import data.Location;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.Vector;

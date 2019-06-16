@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +44,7 @@ public class SignUp {
     
     private String username;
     private String password;
+    private List<String> allergies;
     
     public SignUp() {
     }
@@ -62,27 +66,50 @@ public class SignUp {
         this.password = password;
     }
     
+    public List<String> getAllergies() {
+        
+        return this.allergies;
+    }
+    
+    public void setAllergies(List<String> allergies) {
+        
+        this.allergies = allergies;
+    }
+    
+    public int get_unique_id() {
+        
+        UUID id = UUID.randomUUID();
+        
+        return id.hashCode();
+    }
+    
     public void add() throws IOException {
         
         try {
             
-            
             ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + "localhost" + ":"
                     + 9000 + "/primary");
             
-            User new_user = new User(this.username, this.password, new Vector<Allergy>(), -1);
+            int request_id = this.get_unique_id();
+           
+            LinkedList<Allergy> user_allergies = new LinkedList<>();
+            
+            for(String al : allergies) {
+                
+                user_allergies.add(new Allergy(-1, Integer.parseInt(al), -1));
+            }
+            
+            User new_user = new User(this.username, this.password, user_allergies, -1, request_id);
             
             Client client = ClientBuilder.newClient();
             
             String uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/";
-
             
             WebTarget webTarget = client.target(uri).path("user");
             
-            
             webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(Entity.entity(new_user, MediaType.APPLICATION_XML));
             
-            FacesContext.getCurrentInstance().getExternalContext().redirect("profile.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/FrontEnd/profile/profile.xhtml");
             
         } catch (NotBoundException ex) {
             

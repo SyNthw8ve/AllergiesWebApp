@@ -18,24 +18,31 @@ public class Location implements java.io.Serializable {
     
     @XmlElement(required = true)
     private int type;
+    
     @XmlElement(required = true)
     private float lng;
+    
     @XmlElement(required = true)
     private float lat;
+    
     @XmlElement(required = true)
     private int id;
+    
+    @XmlElement(required = true)
+    private int request_id;
     
     public Location() {
         
         
     }
     
-    public Location(float lng, float lat, int type, int id) {
+    public Location(float lng, float lat, int type, int id, int request_id) {
         
         this.lng = lng;
         this.lat= lat;
         this.type = type;
         this.id = id;
+        this.request_id = request_id;
     }
     
     public float get_long() {
@@ -57,4 +64,10 @@ public class Location implements java.io.Serializable {
         
         return this.id;
     }
+    
+    public int get_request_id() {
+        
+        return this.request_id;
+    }
 }
+

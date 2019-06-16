@@ -25,7 +25,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Profile Page</web-resource-name>
-            <url-pattern>/profile.xhtml</url-pattern>
+            <url-pattern>/profile/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>user</role-name>

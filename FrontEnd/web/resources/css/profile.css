@@ -13,6 +13,7 @@ and open the template in the editor.
     background: transparent;
     border: none;
     cursor: pointer;
+    font-weight: 500;
 }
 
 .addform {
@@ -38,3 +39,24 @@ h4 {
     border-radius: 20px;
 }
 
+#filter p{
+    
+    width: 100%;
+    margin-left: 0px;
+}
+
+#filter label {
+    
+    margin-right: 20px;
+}
+
+#filter {
+    
+    margin: 0 auto;
+}
+
+#locations {
+    
+    width: 100%;
+    margin: 0px auto;
+}

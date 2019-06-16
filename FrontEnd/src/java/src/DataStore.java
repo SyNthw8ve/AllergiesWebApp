@@ -6,10 +6,10 @@
 
 package src;
 
-
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -28,6 +28,14 @@ public class DataStore {
      * Creates a new instance of DataStore
      */
     public DataStore() {
+        
+    }
+    
+    public int get_unique_id() {
+        
+        UUID id = UUID.randomUUID();
+        
+        return id.hashCode();
     }
     
     /*@PostConstruct

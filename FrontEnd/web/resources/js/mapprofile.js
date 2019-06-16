@@ -19,13 +19,15 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 function onMapClick(e) {
 
     
-    var input_long = document.getElementById("long");
-    var input_lat = document.getElementById("lat");
+    var input_long = document.getElementById("addlocationsform:long");
+    var input_lat = document.getElementById("addlocationsform:lat");
     
+    
+   
     //L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
     
-    input_long.value = e.latlng.lng;
-    input_lat.value = e.latlng.lat;
+    input_long.value = e.latlng.lat;
+    input_lat.value = e.latlng.lng;
 }
 
 mymap.on('click', onMapClick);

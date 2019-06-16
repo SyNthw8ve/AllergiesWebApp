@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing+Script|Roboto"/>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+                integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+        <h:outputStylesheet library="css" name="profile.css" />
+    </h:head>
+    <h:body>
+        <div class="row">
+            <div class="col m3 ">
+                <ui:include src="./sidebar.xhtml"/>
+            </div>
+
+            <div class="col m9">
+                <div class="row">
+                    
+                    <h4>Your Locations</h4>
+
+                    <div id="mapid" data="#{profile.to_Js()}"></div>
+
+                    <div class="container center-align" id="filter-group">
+                        <form id="filter">
+                            <label>
+                                <input id="pla" class="check" type="checkbox" name="Plátano" value="1"/>
+                                <span>Plátano</span>
+                            </label>
+                            <label>
+                                <input id="gra" class="check" type="checkbox" name="Gramíneas" value="2"/>
+                                <span>Gramíneas</span>
+                            </label>
+
+                            <label>
+                                <input id="oli" class="check" type="checkbox" name="Oliveira" value="3"/>
+                                <span>Oliveira</span>
+                            </label>
+
+                            <label>
+                                <input id="azi" class="check" type="checkbox" name="Azinheira" value="4"/>
+                                <span>Azinheira</span>
+                            </label>
+                        </form>
+
+                    </div>
+
+                    <div class="container">
+                        <table id="locations">
+                            <thead>
+                                <tr>
+                                    <th>Polen Type</th>
+                                    <th>Longitude</th>
+                                    <th>Latitude</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <ui:repeat value="#{profile.user_Locations}" var="value">
+                                    <tr>
+                                        <td>#{profile.get_allergy_text(value.get_type())}</td>
+                                        <td>#{value.get_long()}</td>
+                                        <td>#{value.get_lat()}</td>
+
+                                        <td>
+                                            <h:form>
+                                                <h:commandLink action="#{profile.remove_location(value.get_id())}" >
+                                                    <i class="material-icons red-text">clear</i>
+                                                </h:commandLink>
+                                            </h:form>
+                                        </td>
+                                    </tr>
+                                </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../resources/js/map.js"></script>
+        <script src="../resources/js/profilenav.js"></script>
+    </h:body>
+</html>
+

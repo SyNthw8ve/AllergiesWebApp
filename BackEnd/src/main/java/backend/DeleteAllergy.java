@@ -6,8 +6,6 @@
 
 package backend;
 
-import java.util.LinkedList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -17,28 +15,36 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author nuno1
  */
-
 @XmlAccessorType(XmlAccessType.FIELD)
 
-@XmlRootElement(name = "locations")
-public class Locations {
+@XmlRootElement(name = "deleteall")
+public class DeleteAllergy {
     
     @XmlElement(required = true)
-    protected List<Location> locations;
+    private int user_id;
     
+    @XmlElement(required = true)
+    private int type;
     
-    public Locations () {
+    public DeleteAllergy() {
         
-        this.locations = new LinkedList<>();
+        
     }
     
-    public Locations (List<Location> list) {
+    public DeleteAllergy(int user_id, int type) {
         
-        this.locations = list;
+        this.user_id = user_id;
+        this.type = type;
     }
     
-    public List<Location> getLocations() {
+    public int get_type() {
         
-        return this.locations;
+        return this.type;
     }
+    
+    public int get_user_id() {
+        
+        return this.user_id;
+    }
+    
 }

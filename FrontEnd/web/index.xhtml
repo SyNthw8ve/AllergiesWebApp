@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Map Allergies</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
@@ -23,16 +24,7 @@
     </h:head>
     <h:body>
 
-        <nav>
-            <div class="nav-wrapper green accent-3">
-                <a href="index.xhtml" class="brand-logo">MapAllergies</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="index.xhtml">Home</a></li>
-                    <li><a href="profile.xhtml">Sign In</a></li>
-                    <li><a href="signup.xhtml">Sign Up</a></li>
-                </ul>
-            </div>
-        </nav>
+        <ui:include src="./navbar.xhtml" />
 
         <div class="row" id="main-display">
            

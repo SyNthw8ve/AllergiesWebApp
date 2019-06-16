@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package backend;
+package data;
 
 import java.util.List;
 import java.util.Vector;
@@ -20,21 +20,28 @@ public class User implements java.io.Serializable {
     
     @XmlElement(required = true)
     private int id;
+    
     @XmlElement(required = true)
     private String username;
+    
     @XmlElement(required = true)
     private List<Allergy> polen;
+    
     @XmlElement(required = true)
     private String password;
     
+    @XmlElement(required = true)
+    private int request_id;
+    
     public User() {}
     
-    public User(String username, String password, List<Allergy> polen, int id) {
+    public User(String username, String password, List<Allergy> polen, int id, int request_id) {
         
         this.username = username;
         this.password = password;
         this.polen = polen;
         this.id = id;
+        this.request_id = request_id;
     }
     
     public String get_username() {
@@ -60,6 +67,16 @@ public class User implements java.io.Serializable {
     public void set_id(int id) {
         
         this.id = id;
+    }
+    
+    public void sert_allergies(List<Allergy> allergies) {
+        
+        this.polen = allergies;
+    }
+    
+    public int get_request_id() {
+        
+        return this.request_id;
     }
     
 }
