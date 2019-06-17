@@ -28,6 +28,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 
 /**
@@ -45,6 +46,7 @@ public class SignUp {
     private String username;
     private String password;
     private List<String> allergies;
+    private boolean in_use = false;
     
     public SignUp() {
     }
@@ -64,6 +66,16 @@ public class SignUp {
     public void setPassword(String password)
     {
         this.password = password;
+    }
+    
+    public void setIn_use(boolean in_use) {
+        
+        this.in_use = in_use;
+    }
+    
+    public boolean getIn_use() {
+        
+        return this.in_use;
     }
     
     public List<String> getAllergies() {
@@ -87,6 +99,8 @@ public class SignUp {
         
         try {
             
+            this.in_use = false;
+            
             ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + "localhost" + ":"
                     + 9000 + "/primary");
             
@@ -107,21 +121,30 @@ public class SignUp {
             
             WebTarget webTarget = client.target(uri).path("user");
             
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(Entity.entity(new_user, MediaType.APPLICATION_XML));
+            Response resp = webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(Entity.entity(new_user, MediaType.APPLICATION_XML));
             
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/FrontEnd/profile/profile.xhtml");
+            System.out.println(resp.getStatusInfo());
+            
+            if(resp.getStatus() == 406) {
+                
+                this.in_use = true;
+                
+            } else {
+                
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/FrontEnd/profile/profile.xhtml");
+            }
             
         } catch (NotBoundException ex) {
             
-            Logger.getLogger(DataStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
             
         } catch (MalformedURLException ex) {
             
-            Logger.getLogger(DataStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
             
         } catch (RemoteException ex) {
             
-            Logger.getLogger(DataStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

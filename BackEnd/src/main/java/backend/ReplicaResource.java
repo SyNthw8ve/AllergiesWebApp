@@ -168,7 +168,7 @@ public class ReplicaResource {
     @Path("/user")
     @PUT
     @Consumes({"application/json", "application/xml"})
-    public synchronized void add_user(User u) throws Exception {
+    public synchronized Response add_user(User u) throws Exception {
 
         if (this.responses.containsKey(u.get_request_id())) {
 
@@ -200,11 +200,15 @@ public class ReplicaResource {
         } catch (SQLException ex) {
 
             Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
+            
+            return Response.status(Response.Status.NOT_ACCEPTABLE).entity("Username alreay in use").build();
         }
         
         this.propagate_user(u);
 
         System.out.println("Adding user " + u.get_username());
+        
+        return Response.ok().build();
     }
 
     @Path("/location")

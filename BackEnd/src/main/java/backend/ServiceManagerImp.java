@@ -64,17 +64,6 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
         return this.RMs;
     }
     
-    @Override
-    public void try_request() throws RemoteException {
-        
-        if(this.primary != null) {
-            
-            //User user = new User("test", "test", new Vector<Integer>(), -1);
-            
-            //this.primary.add_user(user);
-        }
-    }
-    
     public ReplicaManager get_primary() {
         
         return this.primary;
@@ -84,12 +73,9 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
         
         try {
             
-            //System.out.println("Checking primary health...");
-            
             if (this.primary != null) {
                 
                 this.primary.is_alive();
-               // this.try_request();
             }
             
         } catch (RemoteException e) {
@@ -100,9 +86,7 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
     
     public void elect_primary() {
         
-        
         this.RMs.remove(this.primary);
-
         
         for( ReplicaManager rm : this.RMs) {
             

@@ -37,6 +37,9 @@
 
                     <h:form id="addlocationsform" styleClass="addform center-align">
                         <div class="row">
+                            <h:outputText value="Your submission code is: #{profile.submission_code}" rendered="#{profile.submitted}"/>
+                        </div>
+                        <div class="row">
                             <div class="input-field">
                                 <i class="material-icons prefix">place</i>
                                 <h:inputText styleClass="validate" id="long" value="#{profile.lng}"
@@ -55,7 +58,6 @@
                             </div>
                         </div>
                         <div class="row">
-
                             <div class="input-field col s12">
                                 <h:selectOneMenu id="polen"  value="#{profile.polen_type}" valueChangeListener="#{profile.choosePolenType}">
                                     <f:selectItem itemValue="1" itemLabel="Plátano" />
@@ -63,16 +65,13 @@
                                     <f:selectItem itemValue="3" itemLabel="Oliveira" />
                                     <f:selectItem itemValue="4" itemLabel="Azinheira" />
                                 </h:selectOneMenu>
-
                                 <label>Polen Type</label>
                             </div>
-
                         </div>
                         <div class="row">
-
                             <h:commandLink value="Add Location" action="#{profile.add_location()}" styleClass="waves-effect waves-light btn-large text-white"/>
-
                         </div>
+                        
                     </h:form>
                 </div>
             </div>

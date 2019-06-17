@@ -46,6 +46,7 @@ public class Profile {
     String username = "";
     int allergy = 1;
     User user;
+    
     int polen_type = 1;
     float lng;
     float lat;
@@ -59,11 +60,25 @@ public class Profile {
 
     List<Location> user_locations;
     List<Location> risk_locations;
+    
+    boolean submitted = false;
+    
+    int submission_code = -1;
 
     public Profile() {
         
         this.user_locations = new LinkedList<>();
         this.risk_locations = new LinkedList<>();
+    }
+    
+    public boolean getSubmitted() {
+        
+        return this.submitted;
+    }
+    
+    public void setSubmitted(boolean sub) {
+        
+        this.submitted = sub;
     }
 
     public String getUsername() {
@@ -175,6 +190,11 @@ public class Profile {
 
         return this.risk_lat;
     }
+    
+    public int getSubmission_code() {
+        
+        return this.submission_code;
+    }
 
     public void handleLatitudeChange(ValueChangeEvent event) {
 
@@ -239,7 +259,9 @@ public class Profile {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("allergy", 1);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("lat", 0.0);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("long", 0.0);
+        
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().putIfAbsent("req_id", 0);
+        
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().putIfAbsent("up_id", -1);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_polen_type", 1);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_lat", 0.0);
@@ -271,7 +293,7 @@ public class Profile {
 
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
 
-            Logger.getLogger(DataStore.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
 
         }
 
@@ -287,6 +309,8 @@ public class Profile {
 
     public void add_location() {
 
+        this.submitted = false;
+        
         try {
 
             Date date = new Date();
@@ -302,7 +326,9 @@ public class Profile {
 
             Response resp = webTarget.request(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML).post(Entity.entity(l, MediaType.APPLICATION_XML));
             
-            int sub_code = resp.readEntity(SubCode.class).get_code();
+            this.submission_code = resp.readEntity(SubCode.class).get_code();
+            
+            this.submitted = true;
             
             this.get_user_locations();
 
@@ -398,6 +424,7 @@ public class Profile {
             webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(new_allergy, MediaType.APPLICATION_XML));
 
             this.get_allergies();
+            
         } catch (Exception e) {
 
             System.out.println(e.toString());
@@ -479,7 +506,7 @@ public class Profile {
             
             case 1:
                 
-                return "Plátano";
+                return "Plátanos";
                 
             case 2:
                 

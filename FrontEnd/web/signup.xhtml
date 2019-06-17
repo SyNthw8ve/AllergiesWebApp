@@ -20,13 +20,20 @@
 
         <ui:include src="./navbar.xhtml" />
 
+        <div class="row center-align">
+
+        </div>
+
         <div class="valign-wrapper row center-align container" id="main">
+
 
             <h:form id="registerForm" styleClass="col m12 l12">
                 <div class="card-panel white">
                     <h4>Sign Up</h4>
 
                     <div class="row">
+                        <h:outputText id="error_name" styleClass="red-text" value="Username already in use!" rendered="#{signup.in_use}" />
+
                         <div class="input-field">
                             <i class="material-icons prefix">person</i>
                             <h:inputText styleClass="validate" id="username" required="true" value="#{signup.username}"/>
@@ -43,21 +50,21 @@
                         </div>
                     </div>
                     <div class="row">
-                       
-                            <div class="input-field s12 m12 l12">
-                                <h:selectManyMenu value="#{signup.allergies}">
-                                    <f:selectItem itemValue="1" itemLabel="Plátano" />
-                                    <f:selectItem itemValue="2" itemLabel="Gramíneas" />
-                                    <f:selectItem itemValue="3" itemLabel="Oliveira" />
-                                    <f:selectItem itemValue="4" itemLabel="Azinheira" />
-                                </h:selectManyMenu>
-                                <label>Allergies</label>
-                            </div>
-                        
+
+                        <div class="input-field s12 m12 l12">
+                            <h:selectManyMenu value="#{signup.allergies}">
+                                <f:selectItem itemValue="1" itemLabel="Plátano" />
+                                <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                                <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                                <f:selectItem itemValue="4" itemLabel="Azinheira" />
+                            </h:selectManyMenu>
+                            <label>Allergies</label>
+                        </div>
+
                     </div>
-                    
-                        <h:commandButton value="Sign Up" action="#{signup.add()}" styleClass="btn waves-effect waves-light" />
-                    
+
+                    <h:commandLink value="Sign Up" action="#{signup.add()}" styleClass="btn waves-effect waves-light" />
+
                 </div>
             </h:form>
         </div>
