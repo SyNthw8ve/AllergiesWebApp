@@ -28,11 +28,12 @@
             </div>
 
             <div class="col m9">
+
                 <div class="row">
-                    
+
                     <h4>Your Locations</h4>
 
-                    <div id="mapid" data="#{profile.to_Js()}"></div>
+                    <div id="mapid" data="#{profile.to_Js(profile.user_Locations)}"></div>
 
                     <div class="container center-align" id="filter-group">
                         <form id="filter">
@@ -91,7 +92,8 @@
                 </div>
             </div>
         </div>
-
+        
+        
         <script src="../resources/js/map.js"></script>
         <script src="../resources/js/profilenav.js"></script>
     </h:body>

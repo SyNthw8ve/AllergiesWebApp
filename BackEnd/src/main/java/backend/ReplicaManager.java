@@ -19,8 +19,6 @@ public interface ReplicaManager extends java.rmi.Remote {
     
     public boolean is_alive() throws RemoteException;
     
-    public Vector<Location> get_risk(Location p, float distance, Date days, Vector<Integer> polen) throws RemoteException;
-    
     public void promote() throws RemoteException;
     
     public boolean is_primary() throws RemoteException;

@@ -6,6 +6,7 @@
 package backend;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.spi.resource.Singleton;
 import data.Allergies;
@@ -15,6 +16,7 @@ import data.Location;
 import data.Locations;
 import data.NewLocation;
 import data.SMath;
+import data.SubCode;
 import data.User;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -36,11 +38,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -211,8 +210,11 @@ public class ReplicaResource {
     @Path("/location")
     @POST
     @Consumes({"application/json", "application/xml"})
-    public synchronized void add_location(NewLocation l) throws Exception {
+    @Produces({"application/json", "application/xml"})
+    public synchronized SubCode add_location(NewLocation l) throws Exception {
 
+        int submissionCode = -1;
+        
         if (this.responses.containsKey(l.get_request_id())) {
 
             //return;
@@ -221,9 +223,16 @@ public class ReplicaResource {
         try {
 
             Statement state = pc.getStatement();
+            
+            String query = "INSERT INTO submission_codes DEFAULT VALUES RETURNING codesub;";
 
-            String query = "INSERT INTO polen (polen_type, long, lat, user_id, data) VALUES (" + l.get_type() + "," + l.get_lng() + ","
-                    + l.get_lat() + "," + l.get_user_id() + "," + l.get_date() + ");";
+            ResultSet result = state.executeQuery(query);
+            result.next();
+
+            submissionCode = result.getInt(1);
+
+            query = "INSERT INTO polen (polen_type, long, lat, user_id, data, cod_sub) VALUES (" + l.get_type() + "," + l.get_lng() + ","
+                    + l.get_lat() + "," + l.get_user_id() + "," + l.get_date() + "," + submissionCode + ");";
 
             state.execute(query);
 
@@ -235,6 +244,8 @@ public class ReplicaResource {
         this.propagate_add_location(l);
 
         System.out.println("Adding location");
+        
+        return new SubCode(submissionCode);
     }
 
     @DELETE
@@ -591,6 +602,8 @@ public class ReplicaResource {
                 com.sun.jersey.api.client.Client client = com.sun.jersey.api.client.Client.create();
                 WebResource web_resource;
                 
+                System.out.println("Updating location to replica");
+                
                 web_resource = client.resource(uri);
 
                 try {
@@ -703,12 +716,21 @@ public class ReplicaResource {
     @Consumes({"application/json", "application/xml"})
     public synchronized void prop_add_location(NewLocation l) {
 
+        int submissionCode = -1;
+        
         try {
 
             Statement state = pc.getStatement();
+            
+            String query = "INSERT INTO submission_codes DEFAULT VALUES RETURNING codesub;";
 
-            String query = "INSERT INTO polen (polen_type, long, lat, user_id, data) VALUES (" + l.get_type() + "," + l.get_lng() + ","
-                    + l.get_lat() + "," + l.get_user_id() + "," + l.get_date() + ");";
+            ResultSet result = state.executeQuery(query);
+            result.next();
+
+            submissionCode = result.getInt(1);
+
+            query = "INSERT INTO polen (polen_type, long, lat, user_id, data, cod_sub) VALUES (" + l.get_type() + "," + l.get_lng() + ","
+                    + l.get_lat() + "," + l.get_user_id() + "," + l.get_date() + "," + submissionCode + ");";
 
             state.execute(query);
 
@@ -765,6 +787,8 @@ public class ReplicaResource {
 
             
         }
+        
+        System.out.println("Updating location from replica");
 
     }
 
@@ -779,14 +803,12 @@ public class ReplicaResource {
             String query = "INSERT INTO allergies (user_id, type) VALUES (" + allergy.get_id() + "," + allergy.get_type() + ");";
 
             state.execute(query);
-
             
 
         } catch (SQLException ex) {
 
             Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
 
-            
         }
     }
 

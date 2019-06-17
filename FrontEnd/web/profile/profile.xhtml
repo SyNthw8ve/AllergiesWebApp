@@ -33,92 +33,36 @@
 
             <div class="col m9">
 
-                <div id="editlocations" class="row section scrollspy"></div>
+                <div id="mapid" data="#{home.to_Js()}"></div>
 
-                <h4>User Allergies</h4>
-                <ul>
-                    <ui:repeat value="#{profile.user_Allergies}" var="value">
-                        <li>#{value.get_type()}</li>
-                        <h:form>
-                            <h:commandButton value="Remove" action="#{profile.remove_allergies(value)}"/>
-                        </h:form>
+                <div class="container center-align" id="filter-group">
+                    <form id="filter">
+                        <label>
+                            <input id="pla" class="check" type="checkbox" name="Plátano" value="1"/>
+                            <span>Plátano</span>
+                        </label>
+                        <label>
+                            <input id="gra" class="check" type="checkbox" name="Gramíneas" value="2"/>
+                            <span>Gramíneas</span>
+                        </label>
 
-                    </ui:repeat>
-                </ul>
-                <h:form styleClass="center-align">
-                    <div class="row">
+                        <label>
+                            <input id="oli" class="check" type="checkbox" name="Oliveira" value="3"/>
+                            <span>Oliveira</span>
+                        </label>
 
-                        <div class="input-field col s12">
-                            <h:selectOneMenu id="polen"  value="#{profile.allergy}">
-                                <f:selectItem itemValue="1" itemLabel="Plátano" />
-                                <f:selectItem itemValue="2" itemLabel="Gramíneas" />
-                                <f:selectItem itemValue="3" itemLabel="Oliveira" />
-                                <f:selectItem itemValue="4" itemLabel="Azinheira" />
-                            </h:selectOneMenu>
+                        <label>
+                            <input id="azi" class="check" type="checkbox" name="Azinheira" value="4"/>
+                            <span>Azinheira</span>
+                        </label>
+                    </form>
 
-                            <label>Polen Type</label>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <h:commandButton value="Add allergy" action="#{profile.add_allergies}" styleClass="waves-effect waves-light btn-large text-white"/>
-                    </div>
-
-                </h:form>
-
-
-                <h4>User Locations</h4>
-                <ul>
-                    <ui:repeat value="#{profile.user_Locations}" var="value">
-                        <ul>
-                            <li> #{value.get_lat()} </li>
-                            <li> #{value.get_long()} </li>
-                            <li> #{value.get_type()} </li>
-                        </ul>
-                        <h:form>
-                            <h:commandButton value="Remove" action="#{profile.remove_location(value.get_id())}"/>
-                        </h:form>
-                        <h:form>
-                            <h:inputText id="flong" value="#{profile.up_lng}"
-                                         required="true" requiredMessage="Please enter longitude"/>
-                            <h:inputText id="flat" value="#{profile.up_lat}"
-                                         required="true" requiredMessage="Please enter latitude"/>
-
-                            <h:selectOneRadio value="#{profile.up_polen_type}">
-                                <f:selectItem itemValue="1" itemLabel="Plátanos" />
-                                <f:selectItem itemValue="2" itemLabel="Gramíneas" />
-                                <f:selectItem itemValue="3" itemLabel="Oliveira" />
-                                <f:selectItem itemValue="4" itemLabel="Azinheira" />
-                            </h:selectOneRadio>
-                            <h:commandButton value="Edit" action="#{profile.update_location(value.get_id())}"/>
-                        </h:form>
-                    </ui:repeat>
-                </ul>
-
-                <h4>Get walk riks</h4>
-                <h:form>
-                    <h:inputText id="wlong" value="#{profile.risk_lng}"
-                                 required="true" requiredMessage="Please enter longitude"/>
-                    <h:inputText id="wlat" value="#{profile.risk_lat}"
-                                 required="true" requiredMessage="Please enter latitude"/>
-                    <h:commandButton value="Get Risk" action="#{profile.get_risk}"/>
-                </h:form>
-
-                <ul>
-                    <ui:repeat value="#{profile.risk_Locations}" var="value">
-                        <ul>
-                            <li> #{value.get_lat()} </li>
-                            <li> #{value.get_long()} </li>
-                            <li> #{value.get_type()} </li>
-                        </ul>
-                    </ui:repeat>
-                </ul>
+                </div>
             </div>
         </div>
 
 
-        <script src="./resources/js/mapprofile.js"></script>
-        <script src="./resources/js/profilenav.js"></script>
+        <script src="../resources/js/map.js"></script>
     </h:body>
 </html>
 

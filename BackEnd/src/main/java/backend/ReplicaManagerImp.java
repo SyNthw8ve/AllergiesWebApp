@@ -42,8 +42,6 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaManager, java.io.Serializable {
 
-    
-
     private String address;
 
     private int port;
@@ -71,11 +69,6 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
     }
 
     @Override
-    public Vector<Location> get_risk(Location p, float distance, Date days, Vector<Integer> polen) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void promote() throws RemoteException {
 
         this.is_primary = true;
@@ -98,41 +91,10 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
         return this.port;
     }
-
     
     public ServiceManager get_service() {
 
         return this.sm;
-    }
-
-    public void update_user(User u) throws RemoteException {
-
-        Vector<ReplicaManager> rms = this.get_service().get_replicas();
-        String uri;
-
-        for (ReplicaManager rm : rms) {
-
-            if (!rm.is_primary()) {
-
-                Client client = Client.create();
-                WebResource web_resource;
-
-                uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/user";
-                web_resource = client.resource(uri);
-
-                System.out.println(uri);
-
-                try {
-
-                    web_resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, u);
-
-                } catch (Exception e) {
-
-                    System.out.println(e.toString());
-                }
-
-            }
-        }
     }
 
     private static int getPort(int defaultPort) {
@@ -241,6 +203,23 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
                 System.out.println("Tabela users existe.");
             }
+            
+            set = pc.con.getMetaData().getTables(null, null, "submission_codes", null);
+            
+            if (!set.next()) {
+                
+                System.out.println("Tabela submission_codes não encontrada. A criar...");
+                String createSurveys = "create table submission_codes(codesub serial primary key);";
+                
+                state.executeUpdate(createSurveys);
+                
+                System.out.println("Tabela criada");
+                
+            } else {
+                
+                System.out.println("Tabela submission_codes existe.");
+            }
+
 
             set = pc.con.getMetaData().getTables(null, null, "user_roles", null);
 
@@ -266,7 +245,7 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
                 System.out.println("Tabela polen não encontrada. A criar...");
                 String query = "create table polen(id serial primary key, polen_type integer, long float, lat float, user_id integer "
-                        + "references users (id) on delete cascade, data bigint);";
+                        + "references users (id) on delete cascade, data bigint, cod_sub integer);";
 
                 state.executeUpdate(query);
 

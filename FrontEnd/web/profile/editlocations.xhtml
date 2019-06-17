@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Facelet Title</title>
         
@@ -23,6 +24,7 @@
         <h:outputStylesheet library="css" name="profile.css" />
     </h:head>
     <h:body>
+       <script src="../resources/js/editlocation.js"></script>
        <div class="row">
             <div class="col m3 ">
                 <ui:include src="./sidebar.xhtml"/>
@@ -32,7 +34,7 @@
                 <div class="row">
                     <h4>Edit Locations</h4>
                     
-                    <div id="mapid" data="#{profile.to_Js()}"></div>
+                    <div id="mapid" data="#{profile.to_Js(profile.user_Locations)}"></div>
 
                     <div class="container center-align" id="filter-group">
                         <form id="filter">
@@ -78,7 +80,8 @@
 
                                         <td>
                                             <h:form>
-                                                <h:commandLink action="#{profile.update_location(value.get_id())}" >
+                                                <h:commandLink onclick="fillForm(#{value.get_long()}, #{value.get_lat()}, #{value.get_type()})" action="#{profile.save_id(value.get_id())}" >
+                                                    <f:ajax execute="@form" render="@form" />
                                                     <i class="material-icons">edit</i>
                                                 </h:commandLink>
                                             </h:form>
@@ -88,7 +91,45 @@
                             </tbody>
                         </table>
                         
-                        
+                        <h:form id="editlocationsform" styleClass="addform center-align">
+                        <div class="row">
+                            <div class="input-field">
+                                <i class="material-icons prefix">place</i>
+                                <h:inputText styleClass="validate" id="long" value="#{profile.up_lng}"
+                                             required="true" valueChangeListener="#{profile.handleUpLongitudeChange}"/>
+                                <label for="long">Longitude</label>
+                                <span class="helper-text" data-error="Longitude field is required"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field">
+                                <i class="material-icons prefix">place</i>
+                                <h:inputText class="validate" id="lat" value="#{profile.up_lat}" 
+                                             required="true" valueChangeListener="#{profile.handleUpLatitudeChange}"/>
+                                <label for="lat">Latitude</label>
+                                <span class="helper-text" data-error="Latitude field is required"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="input-field col s12">
+                                <h:selectOneMenu id="polen"  value="#{profile.up_polen_type}" valueChangeListener="#{profile.chooseUpPolenType}">
+                                    <f:selectItem itemValue="1" itemLabel="Plátano" />
+                                    <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                                    <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                                    <f:selectItem itemValue="4" itemLabel="Azinheira" />
+                                </h:selectOneMenu>
+
+                                <label>Polen Type</label>
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                            <h:commandLink value="Edit Location" action="#{profile.update_location}" styleClass="waves-effect waves-light btn-large text-white"/>
+
+                        </div>
+                    </h:form>
                     </div>
                 </div>
             </div>

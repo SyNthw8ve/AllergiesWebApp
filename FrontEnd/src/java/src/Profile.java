@@ -11,12 +11,14 @@ import backend.Location;
 import backend.Locations;
 import backend.NewLocation;
 import backend.ReplicaManager;
+import backend.SubCode;
 import backend.User;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -31,6 +33,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -40,17 +43,14 @@ import javax.ws.rs.core.MediaType;
 @RequestScoped
 public class Profile {
 
-    /**
-     * Creates a new instance of Profile
-     */
     String username = "";
-    int allergy = -1;
+    int allergy = 1;
     User user;
     int polen_type = 1;
     float lng;
     float lat;
 
-    int up_polen_type = -1;
+    int up_polen_type = 1;
     float up_lng;
     float up_lat;
 
@@ -61,6 +61,9 @@ public class Profile {
     List<Location> risk_locations;
 
     public Profile() {
+        
+        this.user_locations = new LinkedList<>();
+        this.risk_locations = new LinkedList<>();
     }
 
     public String getUsername() {
@@ -196,14 +199,51 @@ public class Profile {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("polen_type", event.getNewValue());
         }
     }
+    
+    public void handleUpLatitudeChange(ValueChangeEvent event) {
+
+        if (null != event.getNewValue()) {
+
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_lat", event.getNewValue());
+        }
+    }
+
+    public void handleUpLongitudeChange(ValueChangeEvent event) {
+
+        if (null != event.getNewValue()) {
+
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_long", event.getNewValue());
+        }
+    }
+
+    public void chooseUpPolenType(ValueChangeEvent event) {
+
+        if (null != event) {
+
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_polen_type", event.getNewValue());
+        }
+    }
+    
+    public void chooseAllergyType(ValueChangeEvent event) {
+        
+        if (null != event) {
+
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("allergy", event.getNewValue());
+        }
+    }
 
     @PostConstruct
     public void init() {
 
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("polen_type", 1);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("allergy", 1);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("lat", 0.0);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("long", 0.0);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().putIfAbsent("req_id", 0);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().putIfAbsent("up_id", -1);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_polen_type", 1);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_lat", 0.0);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_long", 0.0);
         
         this.username = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName();
 
@@ -218,8 +258,6 @@ public class Profile {
         this.get_user_locations();
     }
     
-    
-
     private String get_replica_location() {
 
         String uri = "";
@@ -262,14 +300,15 @@ public class Profile {
 
             WebTarget webTarget = client.target(uri).path("location");
 
-            System.out.println(this.user.get_id());
-            webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(l, MediaType.APPLICATION_XML));
+            Response resp = webTarget.request(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML).post(Entity.entity(l, MediaType.APPLICATION_XML));
+            
+            int sub_code = resp.readEntity(SubCode.class).get_code();
             
             this.get_user_locations();
 
         } catch (Exception e) {
 
-            System.out.println("Exception: " + e.getLocalizedMessage());
+            System.out.println(e.toString());
         }
     }
 
@@ -288,8 +327,6 @@ public class Profile {
     public void remove_location(int id) {
 
         try {
-
-            System.out.println(id);
 
             String uri = this.get_replica_location();
             int request_id = this.get_unique_id();
@@ -321,8 +358,10 @@ public class Profile {
         this.user.sert_allergies(up_allergies); 
     }
 
-    public void update_location(int id) {
+    public void update_location() {
 
+        int id = (int) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("up_id");
+        
         String uri = this.get_replica_location();
         int request_id = this.get_unique_id();
 
@@ -355,7 +394,7 @@ public class Profile {
             WebTarget webTarget = client.target(uri).path("allergies");
 
             Allergy new_allergy = new Allergy(this.user.get_id(), this.allergy, request_id);
-
+            
             webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(new_allergy, MediaType.APPLICATION_XML));
 
             this.get_allergies();
@@ -371,9 +410,6 @@ public class Profile {
 
             String uri = this.get_replica_location();
             int request_id = this.get_unique_id();
-
-            System.out.println(allergy.get_id());
-            System.out.println(allergy.get_type());
 
             Client client = ClientBuilder.newClient();
 
@@ -409,18 +445,18 @@ public class Profile {
         }
     }
     
-    public String to_Js() {
+    public String to_Js(List<Location> locations) {
         
         String r = "[";
         Location l;
         
-        for(int i = 0; i < this.user_locations.size(); i++) {
+        for(int i = 0; i < locations.size(); i++) {
             
-            l = this.user_locations.get(i);
+            l = locations.get(i);
             
             r += "{\"long\":" + l.get_long() + ", \"lat\":" + l.get_lat() + ", \"type\":" + l.get_type() + "}";
             
-            if (i + 1 != this.user_locations.size()) {
+            if (i + 1 != locations.size()) {
                 
                 r += ",";
             }
@@ -430,6 +466,11 @@ public class Profile {
         r += "]";
         
         return r;
+    }
+    
+    public void save_id(int id) {
+        
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("up_id", id);
     }
     
     public String get_allergy_text(int type) {
@@ -450,7 +491,7 @@ public class Profile {
                 
             case 4:
                 
-                return "Azinheria";
+                return "Azinheira";
                 
             default:
                 

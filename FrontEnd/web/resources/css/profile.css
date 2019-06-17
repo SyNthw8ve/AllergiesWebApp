@@ -58,5 +58,11 @@ h4 {
 #locations {
     
     width: 100%;
-    margin: 0px auto;
+    margin: 60px auto;
+    
+}
+
+#modal1 {
+    
+    height: 400px;
 }

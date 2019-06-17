@@ -10,28 +10,30 @@
                 <a><span class="white-text name">#{profile.username}</span>
 
                 </a>
+                <h:form>
+                    <ui:repeat value="#{profile.user_Allergies}" var="value">
 
-                <ui:repeat value="#{profile.user_Allergies}" var="value">
 
-                    <h:form>
                         <h:commandLink action="#{profile.remove_allergies(value)}">
                             <div class="chip">
                                 #{value.get_text_type()}
                                 <i class="material-icons close">clear</i>
                             </div>
                         </h:commandLink>
-                    </h:form>
 
-                </ui:repeat>
+
+                    </ui:repeat>
+                </h:form>
 
             </div></li>
         <li><a href="/FrontEnd/profile/profile.xhtml" class="white-text"><i class="material-icons">home</i>Home</a></li>
         <li><a href="/FrontEnd/profile/userlocations.xhtml" class="white-text"><i class="material-icons">person_pin_circle</i>Your space</a></li>
+        <li><a href="/FrontEnd/profile/risklocations.xhtml" class="white-text"><i class="material-icons">near_me</i>Risk Locations</a></li>
         <li>
         </li>
         <li><div class="divider"></div></li>
         <li><a class="subheader">Actions</a></li>
-
+        <li><a class="modal-trigger white-text" href="#modal1"><i class="material-icons">add_circle</i>Add allergy</a></li>
         <li><a href="/FrontEnd/profile/addlocation.xhtml" class="white-text"><i class="material-icons">add_location</i>Add locations</a></li>
         <li><a href="/FrontEnd/profile/editlocations.xhtml" class="white-text"><i class="material-icons">edit_location</i>Edit locations</a></li>
         <li><a><i class="material-icons">power_settings_new</i><h:form>
@@ -39,8 +41,36 @@
                 </h:form></a></li>
     </ul>
 
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Add Allergy</h4>
+            <h:form styleClass="center-align container">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <h:selectOneMenu value="#{profile.allergy}" valueChangeListener="#{profile.chooseAllergyType}">
+                            <f:selectItem itemValue="1" itemLabel="Plátano" />
+                            <f:selectItem itemValue="2" itemLabel="Gramíneas" />
+                            <f:selectItem itemValue="3" itemLabel="Oliveira" />
+                            <f:selectItem itemValue="4" itemLabel="Azinheira" />
+                        </h:selectOneMenu>
 
+                        <label>Polen Type</label>
+                    </div>
+                </div>
 
-    <script src="../resources/js/sidebar.js"></script>
+                <div class="row">
+
+                    <h:commandLink value="Add Allergy" action="#{profile.add_allergies}" styleClass="waves-effect waves-light btn-large text-white"/>
+
+                </div>
+            </h:form>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+        </div>
+    </div>
+
+    <script src="../resources/js/modal.js"></script>
+    <script src="../resources/js/sidenav.js"></script>
 
 </ui:composition>
