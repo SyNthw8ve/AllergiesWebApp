@@ -6,6 +6,7 @@
 
 package data;
 
+import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -30,6 +31,9 @@ public class Location implements java.io.Serializable {
     
     @XmlElement(required = true)
     private int request_id;
+    
+    @XmlElement(required = true)
+    private long date;
     
     public Location() {
         
@@ -68,5 +72,15 @@ public class Location implements java.io.Serializable {
     public int get_request_id() {
         
         return this.request_id;
+    }
+    
+    public void set_date(long date) {
+        
+        this.date = date;
+    }
+    
+    public String get_date() {
+        
+        return new Date(this.date).toString();
     }
 }

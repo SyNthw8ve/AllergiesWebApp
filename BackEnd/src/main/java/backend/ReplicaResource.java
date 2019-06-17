@@ -87,7 +87,7 @@ public class ReplicaResource {
 
             Statement state = this.pc.getStatement();
 
-            String query = "SELECT id, polen_type, long, lat FROM polen WHERE user_id =" + id + ";";
+            String query = "SELECT id, polen_type, long, lat, data FROM polen WHERE user_id =" + id + ";";
 
             ResultSet set = state.executeQuery(query);
 
@@ -97,8 +97,13 @@ public class ReplicaResource {
                 int type = set.getInt("polen_type");
                 float lng = set.getFloat("long");
                 float lat = set.getFloat("lat");
+                long date = set.getLong("data");
 
-                locations.add(new Location(lng, lat, type, loc_id, -1));
+                Location l = new Location(lng, lat, type, loc_id, -1);
+                
+                l.set_date(date);
+                
+                locations.add(l);
 
             }
 
@@ -295,7 +300,7 @@ public class ReplicaResource {
         try {
             Statement state = pc.getStatement();
 
-            String query = "SELECT id, polen_type, long, lat FROM polen;";
+            String query = "SELECT id, polen_type, long, lat, data FROM polen;";
 
             ResultSet set = state.executeQuery(query);
 
@@ -305,8 +310,13 @@ public class ReplicaResource {
                 int type = set.getInt("polen_type");
                 float lng = set.getFloat("long");
                 float lat = set.getFloat("lat");
+                long date = set.getLong("data");
 
-                locations.add(new Location(lng, lat, type, loc_id, -1));
+                Location l = new Location(lng, lat, type, loc_id, -1);
+                
+                l.set_date(date);
+                
+                locations.add(l);
             }
 
             set.close();
@@ -466,7 +476,7 @@ public class ReplicaResource {
                 types.add(set.getInt("type"));
             }
 
-            query = "SELECT polen_type, long, lat FROM polen;";
+            query = "SELECT polen_type, long, lat, data FROM polen;";
 
             set = state.executeQuery(query);
 
@@ -481,8 +491,12 @@ public class ReplicaResource {
                         int type = set.getInt("polen_type");
                         float lng_risk = set.getFloat("long");
                         float lat_risk = set.getFloat("lat");
+                        long date = set.getLong("data");
 
-                        risk_locations.add(new Location(lng_risk, lat_risk, type, -1, -1));
+                        Location l = new Location(lng_risk, lat_risk, type, -1, -1);
+                        l.set_date(date);
+                        
+                        risk_locations.add(l);
                     }
                 }
             }
