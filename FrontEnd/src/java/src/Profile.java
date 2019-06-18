@@ -13,13 +13,17 @@ import backend.NewLocation;
 import backend.ReplicaManager;
 import backend.SubCode;
 import backend.User;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -269,29 +273,49 @@ public class Profile {
         
         this.username = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName();
 
-        String uri = this.get_replica_location();
+        try {
+            
+            String uri = this.get_replica_location();
+            
+            Client client = ClientBuilder.newClient();
+            
+            String request_id = this.get_unique_id();
 
-        Client client = ClientBuilder.newClient();
+            WebTarget webTarget = client.target(uri).path("user").queryParam("request_id", request_id).queryParam("username", this.username);
 
-        WebTarget webTarget = client.target(uri).path("user").queryParam("username", this.username);
+            this.user = webTarget.request(MediaType.APPLICATION_XML).get(User.class);
 
-        this.user = webTarget.request(MediaType.APPLICATION_XML).get(User.class);
+            this.get_user_locations();
+            
+        } catch (IOException ex) {
+            
+            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        this.get_user_locations();
+        
     }
     
-    private String get_replica_location() {
+    private String get_replica_location() throws IOException {
 
         String uri = "";
 
         try {
+            
+            InputStream in = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/conf.properties");
 
-            ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + "localhost" + ":"
-                    + 9000 + "/primary");
+            Properties prop = new Properties();
+
+            prop.load(in);
+
+            String regHost = prop.getProperty("reg.host", "localhost");
+            int regPort = Integer.parseInt(prop.getProperty("reg.port", "9000"));
+            
+            ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + regHost + ":"
+                    + regPort + "/primary");
 
             uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/";
 
-        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+        } catch (NotBoundException | MalformedURLException | RemoteException | FileNotFoundException ex) {
 
             Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -300,11 +324,11 @@ public class Profile {
         return uri;
     }
     
-    public int get_unique_id() {
+    public String get_unique_id() {
         
         UUID id = UUID.randomUUID();
         
-        return id.hashCode();
+        return id.toString();
     }
 
     public void add_location() {
@@ -315,7 +339,7 @@ public class Profile {
 
             Date date = new Date();
             
-            int request_id = this.get_unique_id();
+            String request_id = this.get_unique_id();
 
             NewLocation l = new NewLocation(this.lng, this.lat, this.polen_type, this.user.get_id(), date.getTime(), request_id);
             String uri = this.get_replica_location();
@@ -332,18 +356,18 @@ public class Profile {
             
             this.get_user_locations();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
 
             System.out.println(e.toString());
         }
     }
 
-    public void get_user_locations() {
+    public void get_user_locations() throws IOException {
 
         Client client = ClientBuilder.newClient();
 
         String uri = this.get_replica_location();
-        int request_id = this.get_unique_id();
+        String request_id = this.get_unique_id();
 
         WebTarget webTarget = client.target(uri).path("user_locations").queryParam("request_id", request_id).queryParam("id", this.user.get_id());
 
@@ -355,7 +379,7 @@ public class Profile {
         try {
 
             String uri = this.get_replica_location();
-            int request_id = this.get_unique_id();
+            String request_id = this.get_unique_id();
 
             Client client = ClientBuilder.newClient();
 
@@ -364,18 +388,19 @@ public class Profile {
             webTarget.request(MediaType.APPLICATION_XML).delete();
             
             this.get_user_locations();
-        } catch (Exception e) {
+            
+        } catch (IOException e) {
 
             System.out.println(e.toString());
         }
     }
     
-    public void get_allergies() {
+    public void get_allergies() throws IOException {
         
         Client client = ClientBuilder.newClient();
 
         String uri = this.get_replica_location();
-        int request_id = this.get_unique_id();
+        String request_id = this.get_unique_id();
 
         WebTarget webTarget = client.target(uri).path("allergies").queryParam("request_id", request_id).queryParam("id", this.user.get_id());
         
@@ -384,18 +409,22 @@ public class Profile {
         this.user.sert_allergies(up_allergies); 
     }
 
-    public void update_location() {
+    public void update_location() throws IOException {
+        
+        Date date = new Date();
 
         int id = (int) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("up_id");
         
         String uri = this.get_replica_location();
-        int request_id = this.get_unique_id();
+        String request_id = this.get_unique_id();
 
         Client client = ClientBuilder.newClient();
 
         WebTarget webTarget = client.target(uri).path("location");
 
         Location l = new Location(this.up_lng, this.up_lat, this.up_polen_type, id, request_id);
+        
+        l.set_date(date.getTime());
 
         webTarget.request(MediaType.APPLICATION_XML).put(Entity.entity(l, MediaType.APPLICATION_XML));
         
@@ -413,7 +442,7 @@ public class Profile {
         try {
 
             String uri = this.get_replica_location();
-            int request_id = this.get_unique_id();
+            String request_id = this.get_unique_id();
 
             Client client = ClientBuilder.newClient();
 
@@ -425,7 +454,7 @@ public class Profile {
 
             this.get_allergies();
             
-        } catch (Exception e) {
+        } catch (IOException e) {
 
             System.out.println(e.toString());
         }
@@ -436,7 +465,7 @@ public class Profile {
         try {
 
             String uri = this.get_replica_location();
-            int request_id = this.get_unique_id();
+            String request_id = this.get_unique_id();
 
             Client client = ClientBuilder.newClient();
 
@@ -445,7 +474,7 @@ public class Profile {
             webTarget.request(MediaType.APPLICATION_XML).delete();
             
             this.get_allergies();
-        } catch (Exception e) {
+        } catch (IOException e) {
 
             System.out.println(e.toString());
         }
@@ -456,7 +485,7 @@ public class Profile {
         try {
 
             String uri = this.get_replica_location();
-            int request_id = this.get_unique_id();
+            String request_id = this.get_unique_id();
 
             Client client = ClientBuilder.newClient();
 
@@ -466,7 +495,7 @@ public class Profile {
 
             this.risk_locations = risks.getLocations();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
 
             System.out.println(e.toString());
         }

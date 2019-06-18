@@ -31,11 +31,11 @@ public class User implements java.io.Serializable {
     private String password;
     
     @XmlElement(required = true)
-    private int request_id;
+    private String request_id;
     
     public User() {}
     
-    public User(String username, String password, List<Allergy> polen, int id, int request_id) {
+    public User(String username, String password, List<Allergy> polen, int id, String request_id) {
         
         this.username = username;
         this.password = password;
@@ -74,7 +74,7 @@ public class User implements java.io.Serializable {
         this.polen = allergies;
     }
     
-    public int get_request_id() {
+    public String get_request_id() {
         
         return this.request_id;
     }

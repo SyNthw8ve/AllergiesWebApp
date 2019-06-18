@@ -8,7 +8,7 @@ var locations = JSON.parse(document.getElementById('mapid').getAttribute('data')
 
 var markers = [];
 
-var mymap = L.map('mapid').setView([38.56667, -7.9], 13);
+var mymap = L.map('mapid').locate({setView: true, maxZoom: 13});
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -43,7 +43,7 @@ function filter_locations(check) {
             var new_marker = L.marker([l.long, l.lat]).addTo(mymap);
             markers.push(new_marker);
         }
-    })
+    });
 }
 
 var filters = document.getElementById('filter').addEventListener("change", function() {
@@ -56,10 +56,10 @@ var filters = document.getElementById('filter').addEventListener("change", funct
 
             check.push(Number(node.value));
         }
-    })
+    });
     
     filter_locations(check);
-})
+});
 
 function add_locations() {
 

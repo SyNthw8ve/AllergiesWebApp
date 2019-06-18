@@ -23,14 +23,14 @@ public class Allergy implements java.io.Serializable {
     private int type;
     
     @XmlElement(required = true)
-    private int request_id;
+    private String request_id;
     
     public Allergy() {
         
         
     }
     
-    public Allergy (int id, int type, int request_id) {
+    public Allergy (int id, int type, String request_id) {
         
         this.id = id;
         this.type = type;
@@ -53,7 +53,7 @@ public class Allergy implements java.io.Serializable {
             
             case 1:
                 
-                return "Plátano";
+                return "Plátanos";
                 
             case 2:
                 
@@ -65,7 +65,7 @@ public class Allergy implements java.io.Serializable {
                 
             case 4:
                 
-                return "Azinheria";
+                return "Azinheira";
                 
             default:
                 
@@ -73,7 +73,7 @@ public class Allergy implements java.io.Serializable {
         }
     }
     
-    public int get_request_id() {
+    public String get_request_id() {
         
         return this.request_id;
     }

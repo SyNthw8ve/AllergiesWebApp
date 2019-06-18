@@ -32,14 +32,14 @@ public class NewLocation implements java.io.Serializable {
     private long date;
     
     @XmlElement(required = true)
-    private int request_id;
+    private String request_id;
     
     public NewLocation() {
         
         
     }
     
-    public NewLocation(float lng, float lat, int type, int user_id, long date, int request_id) {
+    public NewLocation(float lng, float lat, int type, int user_id, long date, String request_id) {
         
         this.lng = lng;
         this.lat = lat;
@@ -74,9 +74,8 @@ public class NewLocation implements java.io.Serializable {
         return this.date;
     }
     
-    public int get_request_id() {
+    public String get_request_id() {
         
         return this.request_id;
     }
-    
-}
+}  

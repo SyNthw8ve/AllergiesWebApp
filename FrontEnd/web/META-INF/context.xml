@@ -3,7 +3,7 @@
  
   <Realm className="org.apache.catalina.realm.JDBCRealm" localDataSource="true"
          driverName="org.postgresql.Driver"
-         connectionURL="jdbc:postgresql://localhost/bd1?user=l38489&amp;password=1234"
+         connectionURL="jdbc:postgresql://localhost/bd2?user=l38489&amp;password=1234"
          userTable="users" userNameCol="username" userCredCol="password"
          userRoleTable="user_roles" roleNameCol="role"
          digest="MD5"/>

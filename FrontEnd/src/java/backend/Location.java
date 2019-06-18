@@ -30,7 +30,7 @@ public class Location implements java.io.Serializable {
     private int id;
     
     @XmlElement(required = true)
-    private int request_id;
+    private String request_id;
     
     @XmlElement(required = true)
     private long date;
@@ -40,7 +40,7 @@ public class Location implements java.io.Serializable {
         
     }
     
-    public Location(float lng, float lat, int type, int id, int request_id) {
+    public Location(float lng, float lat, int type, int id, String request_id) {
         
         this.lng = lng;
         this.lat= lat;
@@ -69,7 +69,7 @@ public class Location implements java.io.Serializable {
         return this.id;
     }
     
-    public int get_request_id() {
+    public String get_request_id() {
         
         return this.request_id;
     }
@@ -84,3 +84,4 @@ public class Location implements java.io.Serializable {
         return new Date(this.date).toString();
     }
 }
+

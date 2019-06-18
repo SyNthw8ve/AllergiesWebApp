@@ -10,12 +10,16 @@ import backend.Allergy;
 import backend.Locations;
 import backend.ReplicaManager;
 import backend.User;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -88,11 +92,40 @@ public class SignUp {
         this.allergies = allergies;
     }
     
-    public int get_unique_id() {
+    public String get_unique_id() {
         
         UUID id = UUID.randomUUID();
         
-        return id.hashCode();
+        return id.toString();
+    }
+    
+    private String get_replica_location() throws IOException {
+
+        String uri = "";
+
+        try {
+            
+            InputStream in = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/conf.properties");
+
+            Properties prop = new Properties();
+
+            prop.load(in);
+
+            String regHost = prop.getProperty("reg.host", "localhost");
+            int regPort = Integer.parseInt(prop.getProperty("reg.port", "9000"));
+            
+            ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + regHost + ":"
+                    + regPort + "/primary");
+
+            uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/";
+
+        } catch (NotBoundException | MalformedURLException | RemoteException | FileNotFoundException ex) {
+
+            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return uri;
     }
     
     public void add() throws IOException {
@@ -100,24 +133,20 @@ public class SignUp {
         try {
             
             this.in_use = false;
-            
-            ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + "localhost" + ":"
-                    + 9000 + "/primary");
-            
-            int request_id = this.get_unique_id();
+            String request_id = this.get_unique_id();
            
             LinkedList<Allergy> user_allergies = new LinkedList<>();
             
             for(String al : allergies) {
                 
-                user_allergies.add(new Allergy(-1, Integer.parseInt(al), -1));
+                user_allergies.add(new Allergy(-1, Integer.parseInt(al), ""));
             }
             
             User new_user = new User(this.username, this.password, user_allergies, -1, request_id);
             
             Client client = ClientBuilder.newClient();
             
-            String uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/";
+            String uri = this.get_replica_location();
             
             WebTarget webTarget = client.target(uri).path("user");
             
@@ -134,15 +163,7 @@ public class SignUp {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/FrontEnd/profile/profile.xhtml");
             }
             
-        } catch (NotBoundException ex) {
-            
-            Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
-            
-        } catch (MalformedURLException ex) {
-            
-            Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
-            
-        } catch (RemoteException ex) {
+        } catch (MalformedURLException | RemoteException ex) {
             
             Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
         }

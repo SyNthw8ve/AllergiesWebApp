@@ -17,7 +17,9 @@ import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.Math;
 
 import java.net.MalformedURLException;
@@ -29,6 +31,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,10 +135,16 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
     public static void main(String args[]) throws RemoteException, NotBoundException, MalformedURLException, IOException, Exception {
 
-        String regHost = "localhost";
-        int regPort = 9000;
-
         if (args.length == 6) {
+            
+            InputStream in = new FileInputStream("./conf.properties");
+
+            Properties prop = new Properties();
+
+            prop.load(in);
+
+            String regHost = prop.getProperty("reg.host", "localhost");
+            String regPort = prop.getProperty("reg.port", "9000");
 
             try {
                 String address = args[0];
