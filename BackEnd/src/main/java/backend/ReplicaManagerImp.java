@@ -6,21 +6,17 @@
 package backend;
 
 import data.DataObject;
-import data.Location;
-import data.User;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.Math;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -28,13 +24,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 import java.util.Properties;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -45,15 +36,15 @@ import org.glassfish.grizzly.http.server.HttpServer;
  */
 public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaManager, java.io.Serializable {
 
-    private String address;
+    private final String address;
 
-    private int port;
+    private final int port;
 
     boolean is_primary = false;
 
-    private ServiceManager sm;
+    private final ServiceManager sm;
 
-    private PostgresConnector pc;
+    private final PostgresConnector pc;
 
     public ReplicaManagerImp(String address, int port, ServiceManager sm, PostgresConnector pc) throws RemoteException {
 
@@ -127,7 +118,7 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
             web_resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, data);
 
-        } catch (Exception e) {
+        } catch (ClientHandlerException | UniformInterfaceException e) {
 
             System.out.println(e.toString());
         }
@@ -177,7 +168,6 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
                 httpServer.stop();
 
-
             } catch (Exception e) {
 
                 System.out.println(e.toString());
@@ -185,7 +175,7 @@ public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaMan
 
         } else {
 
-            System.out.println("Insuficient args");
+            System.out.println("Insuficient args. Args should be: server_host server_port db_host db_name db_user db_password");
         }
 
     }

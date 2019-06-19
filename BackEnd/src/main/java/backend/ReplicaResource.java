@@ -5,6 +5,8 @@
  */
 package backend;
 
+import data.DeleteLocation;
+import data.DeleteAllergy;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.spi.resource.Singleton;
@@ -210,7 +212,7 @@ public class ReplicaResource {
                 }
 
                 set.close();
-                
+
             } else {
 
                 resp = Response.status(Response.Status.NOT_ACCEPTABLE).entity("Username alreay in use").build();
@@ -435,21 +437,29 @@ public class ReplicaResource {
             return;
         }
 
-        try {
-            Statement state = pc.getStatement();
+        if (!allergic(allergy)) {
 
-            String query = "INSERT INTO allergies (user_id, type) VALUES (" + allergy.get_id() + "," + allergy.get_type() + ");";
+            try {
 
-            state.execute(query);
+                Statement state = pc.getStatement();
 
-        } catch (SQLException ex) {
+                String query = "INSERT INTO allergies (user_id, type) VALUES (" + allergy.get_id() + "," + allergy.get_type() + ");";
 
-            Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
+                state.execute(query);
+
+            } catch (SQLException ex) {
+
+                Logger.getLogger(ReplicaManagerImp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            this.propagate_add_allergy(allergy);
+
+            System.out.println("Adding allergy");
+
+        } else {
+            
+            System.out.println("Already allergic");
         }
-
-        this.propagate_add_allergy(allergy);
-
-        System.out.println("Adding allergy");
     }
 
     @DELETE
@@ -764,8 +774,8 @@ public class ReplicaResource {
                 }
 
                 set.close();
-                
-            } 
+
+            }
 
         } catch (SQLException ex) {
 
@@ -905,4 +915,23 @@ public class ReplicaResource {
 
         return size > 0;
     }
+
+    public boolean allergic(Allergy allergy) throws SQLException {
+
+        Statement state = pc.getStatement();
+
+        String query = "SELECT type FROM allergies WHERE user_id =" + allergy.get_id() + ";";
+
+        ResultSet set = state.executeQuery(query);
+
+        LinkedList<Integer> allergies = new LinkedList<>();
+
+        while (set.next()) {
+
+            allergies.add(set.getInt("type"));
+        }
+
+        return allergies.contains(allergy.get_type());
+    }
+
 }

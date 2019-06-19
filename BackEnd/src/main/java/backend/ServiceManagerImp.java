@@ -142,7 +142,7 @@ public class ServiceManagerImp extends UnicastRemoteObject implements ServiceMan
             }
         };
 
-        timer.schedule(task, 0, 1000);
+        timer.schedule(task, 0, 1);
 
         System.out.println("Bound");
     }

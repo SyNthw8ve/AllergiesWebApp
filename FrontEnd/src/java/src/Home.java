@@ -9,7 +9,6 @@ import backend.Location;
 import backend.Locations;
 import backend.ReplicaManager;
 import java.awt.Event;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +48,6 @@ public class Home {
     public Home() {
 
         filter = new int[4];
-        //locations = new Vector<>();
     }
 
     public List<Location> get_locations() {

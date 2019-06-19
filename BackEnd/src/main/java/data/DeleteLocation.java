@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package backend;
+package data;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -17,29 +17,29 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 
-@XmlRootElement(name = "deleteall")
-public class DeleteAllergy {
+@XmlRootElement(name = "delete")
+public class DeleteLocation {
+    
+    @XmlElement(required = true)
+    private int id;
     
     @XmlElement(required = true)
     private int user_id;
     
-    @XmlElement(required = true)
-    private int type;
-    
-    public DeleteAllergy() {
+    public DeleteLocation() {
         
         
     }
     
-    public DeleteAllergy(int user_id, int type) {
+    public DeleteLocation(int id, int user_id) {
         
+        this.id = id;
         this.user_id = user_id;
-        this.type = type;
     }
     
-    public int get_type() {
+    public int get_id() {
         
-        return this.type;
+        return this.id;
     }
     
     public int get_user_id() {
