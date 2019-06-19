@@ -67,7 +67,8 @@
                                     <th>Longitude</th>
                                     <th>Latitude</th>
                                     <th>Date</th>
-                                    <th></th>
+                                    <th>View</th>
+                                    <th>Remove</th>
                                 </tr>
                             </thead>
 
@@ -78,7 +79,15 @@
                                         <td>#{value.get_long()}</td>
                                         <td>#{value.get_lat()}</td>
                                         <td>#{value.get_date()}</td>
-
+                                        <td>
+                                            <h:form>
+                                                <h:commandLink onclick="set_view(#{value.get_lat()}, #{value.get_long()})" action="#{profile.save_id(value.get_id())}" >
+                                                    <f:ajax execute="@form" render="@form" />
+                                                    <i class="material-icons">visibility</i>
+                                                </h:commandLink>
+                                               
+                                            </h:form>
+                                        </td>
                                         <td>
                                             <h:form>
                                                 <h:commandLink action="#{profile.remove_location(value.get_id())}" >

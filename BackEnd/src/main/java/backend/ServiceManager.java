@@ -12,7 +12,7 @@ import java.util.Vector;
 
 /**
  *
- * @author nuno1
+ * @author mt
  */
 public interface ServiceManager extends java.rmi.Remote{
     

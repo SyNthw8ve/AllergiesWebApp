@@ -20,7 +20,7 @@ import java.util.Vector;
 
 /**
  *
- * @author nuno1
+ * @author mt
  */
 public class ServiceManagerImp extends UnicastRemoteObject implements ServiceManager, java.io.Serializable {
 

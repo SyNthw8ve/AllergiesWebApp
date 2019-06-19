@@ -13,7 +13,7 @@ import java.util.Vector;
 
 /**
  *
- * @author nuno1
+ * @author mt
  */
 public interface ReplicaManager extends java.rmi.Remote {
     

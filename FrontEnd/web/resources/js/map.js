@@ -70,3 +70,9 @@ function add_locations() {
     }
 }
 
+function set_view(lng, lat) {
+    
+    
+    mymap.panTo([lat, lng], 18);
+}
+

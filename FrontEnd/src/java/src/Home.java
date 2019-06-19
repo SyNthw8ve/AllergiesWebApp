@@ -6,28 +6,16 @@
 package src;
 
 import backend.Location;
-import backend.Locations;
-import backend.ReplicaManager;
 import java.awt.Event;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 
 /*
  *
@@ -40,26 +28,21 @@ public class Home {
     /**
      * Creates a new instance of Home
      */
-    String name = "Nuno";
+    String name = "";
 
     int[] filter;
     public List<Location> locations;
+    Client cl;
 
     public Home() {
 
         filter = new int[4];
+        cl = new Client();
     }
 
     public List<Location> get_locations() {
 
         return this.locations;
-    }
-
-    public String get_unique_id() {
-
-        UUID id = UUID.randomUUID();
-
-        return id.toString();
     }
 
     public void changeValues(Event e) {
@@ -98,52 +81,13 @@ public class Home {
 
         return r;
     }
-
-     private String get_replica_location() throws IOException {
-
-        String uri = "";
-
-        try {
-            
-            InputStream in = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/conf.properties");
-
-            Properties prop = new Properties();
-
-            prop.load(in);
-
-            String regHost = prop.getProperty("reg.host", "localhost");
-            int regPort = Integer.parseInt(prop.getProperty("reg.port", "9000"));
-            
-            ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + regHost + ":"
-                    + regPort + "/primary");
-
-            uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/";
-
-        } catch (NotBoundException | MalformedURLException | RemoteException | FileNotFoundException ex) {
-
-            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-
-        return uri;
-    }
-    
+  
     @PostConstruct
     public void init()  {
 
         try {
-
-            String request_id = this.get_unique_id();
-
-            Client client = ClientBuilder.newClient();
-
-            String uri = this.get_replica_location();
-
-            WebTarget webTarget = client.target(uri).path("location").queryParam("request_id", request_id);
-
-            Locations loc = webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(Locations.class);
-
-            this.locations = loc.getLocations();
+            
+            this.locations = this.cl.get_locations();
 
         } catch (MalformedURLException ex) {
 

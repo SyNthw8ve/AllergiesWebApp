@@ -5,26 +5,14 @@
  */
 package src;
 
-import backend.Allergies;
 import backend.Allergy;
 import backend.Location;
-import backend.Locations;
 import backend.NewLocation;
-import backend.ReplicaManager;
-import backend.SubCode;
 import backend.User;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -32,12 +20,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  *
@@ -68,11 +50,15 @@ public class Profile {
     boolean submitted = false;
     
     int submission_code = -1;
+    
+    private src.Client cl;
 
     public Profile() {
         
         this.user_locations = new LinkedList<>();
         this.risk_locations = new LinkedList<>();
+        
+        this.cl = new src.Client();
     }
     
     public boolean getSubmitted() {
@@ -275,15 +261,7 @@ public class Profile {
 
         try {
             
-            String uri = this.get_replica_location();
-            
-            Client client = ClientBuilder.newClient();
-            
-            String request_id = this.get_unique_id();
-
-            WebTarget webTarget = client.target(uri).path("user").queryParam("request_id", request_id).queryParam("username", this.username);
-
-            this.user = webTarget.request(MediaType.APPLICATION_XML).get(User.class);
+            this.user = this.cl.get_user(this.username);
 
             this.get_user_locations();
             
@@ -294,42 +272,6 @@ public class Profile {
 
         
     }
-    
-    private String get_replica_location() throws IOException {
-
-        String uri = "";
-
-        try {
-            
-            InputStream in = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/conf.properties");
-
-            Properties prop = new Properties();
-
-            prop.load(in);
-
-            String regHost = prop.getProperty("reg.host", "localhost");
-            int regPort = Integer.parseInt(prop.getProperty("reg.port", "9000"));
-            
-            ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + regHost + ":"
-                    + regPort + "/primary");
-
-            uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/";
-
-        } catch (NotBoundException | MalformedURLException | RemoteException | FileNotFoundException ex) {
-
-            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-
-        return uri;
-    }
-    
-    public String get_unique_id() {
-        
-        UUID id = UUID.randomUUID();
-        
-        return id.toString();
-    }
 
     public void add_location() {
 
@@ -339,18 +281,9 @@ public class Profile {
 
             Date date = new Date();
             
-            String request_id = this.get_unique_id();
-
-            NewLocation l = new NewLocation(this.lng, this.lat, this.polen_type, this.user.get_id(), date.getTime(), request_id);
-            String uri = this.get_replica_location();
-
-            Client client = ClientBuilder.newClient();
-
-            WebTarget webTarget = client.target(uri).path("location");
-
-            Response resp = webTarget.request(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML).post(Entity.entity(l, MediaType.APPLICATION_XML));
+            NewLocation l = new NewLocation(this.lng, this.lat, this.polen_type, this.user.get_id(), date.getTime(), "");
             
-            this.submission_code = resp.readEntity(SubCode.class).get_code();
+            this.submission_code = this.cl.add_location(l);
             
             this.submitted = true;
             
@@ -364,28 +297,14 @@ public class Profile {
 
     public void get_user_locations() throws IOException {
 
-        Client client = ClientBuilder.newClient();
-
-        String uri = this.get_replica_location();
-        String request_id = this.get_unique_id();
-
-        WebTarget webTarget = client.target(uri).path("user_locations").queryParam("request_id", request_id).queryParam("id", this.user.get_id());
-
-        this.user_locations = webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(Locations.class).getLocations();
+        this.user_locations = this.cl.get_user_locations(this.user.get_id());
     }
 
     public void remove_location(int id) {
 
         try {
 
-            String uri = this.get_replica_location();
-            String request_id = this.get_unique_id();
-
-            Client client = ClientBuilder.newClient();
-
-            WebTarget webTarget = client.target(uri).path("location").queryParam("request_id", request_id).queryParam("id", id).queryParam("user_id", this.user.get_id());
-
-            webTarget.request(MediaType.APPLICATION_XML).delete();
+            this.cl.remove_location(id, this.user.get_id());
             
             this.get_user_locations();
             
@@ -397,16 +316,9 @@ public class Profile {
     
     public void get_allergies() throws IOException {
         
-        Client client = ClientBuilder.newClient();
-
-        String uri = this.get_replica_location();
-        String request_id = this.get_unique_id();
-
-        WebTarget webTarget = client.target(uri).path("allergies").queryParam("request_id", request_id).queryParam("id", this.user.get_id());
+        List<Allergy> up_allergies = this.cl.get_allergies(this.user.get_id());
         
-        List<Allergy> up_allergies = webTarget.request(MediaType.APPLICATION_XML).get(Allergies.class).getAllergies();
-        
-        this.user.sert_allergies(up_allergies); 
+        this.user.set_allergies(up_allergies); 
     }
 
     public void update_location() throws IOException {
@@ -415,18 +327,11 @@ public class Profile {
 
         int id = (int) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("up_id");
         
-        String uri = this.get_replica_location();
-        String request_id = this.get_unique_id();
-
-        Client client = ClientBuilder.newClient();
-
-        WebTarget webTarget = client.target(uri).path("location");
-
-        Location l = new Location(this.up_lng, this.up_lat, this.up_polen_type, id, request_id);
+        Location l = new Location(this.up_lng, this.up_lat, this.up_polen_type, id, "");
         
         l.set_date(date.getTime());
-
-        webTarget.request(MediaType.APPLICATION_XML).put(Entity.entity(l, MediaType.APPLICATION_XML));
+        
+        this.cl.update_location(l);
         
         this.get_user_locations();
     }
@@ -441,16 +346,9 @@ public class Profile {
 
         try {
 
-            String uri = this.get_replica_location();
-            String request_id = this.get_unique_id();
-
-            Client client = ClientBuilder.newClient();
-
-            WebTarget webTarget = client.target(uri).path("allergies");
-
-            Allergy new_allergy = new Allergy(this.user.get_id(), this.allergy, request_id);
+            Allergy new_allergy = new Allergy(this.user.get_id(), this.allergy, "");
             
-            webTarget.request(MediaType.APPLICATION_XML).post(Entity.entity(new_allergy, MediaType.APPLICATION_XML));
+            this.cl.add_allergy(new_allergy);
 
             this.get_allergies();
             
@@ -463,17 +361,11 @@ public class Profile {
     public void remove_allergies(Allergy allergy) {
 
         try {
-
-            String uri = this.get_replica_location();
-            String request_id = this.get_unique_id();
-
-            Client client = ClientBuilder.newClient();
-
-            WebTarget webTarget = client.target(uri).path("allergies").queryParam("request_id", request_id).queryParam("user_id", allergy.get_id()).queryParam("type", allergy.get_type());
-
-            webTarget.request(MediaType.APPLICATION_XML).delete();
+            
+            this.cl.remove_allergy(allergy.get_id(), allergy.get_type());
             
             this.get_allergies();
+            
         } catch (IOException e) {
 
             System.out.println(e.toString());
@@ -484,16 +376,7 @@ public class Profile {
 
         try {
 
-            String uri = this.get_replica_location();
-            String request_id = this.get_unique_id();
-
-            Client client = ClientBuilder.newClient();
-
-            WebTarget webTarget = client.target(uri).path("risk").queryParam("request_id", request_id).queryParam("id", this.user.get_id()).queryParam("lng", this.risk_lng).queryParam("lat", this.risk_lat);
-
-            Locations risks = webTarget.request(MediaType.APPLICATION_XML).get(Locations.class);
-
-            this.risk_locations = risks.getLocations();
+            this.risk_locations = this.cl.get_risk_locations(this.user.get_id(), this.risk_lng, this.risk_lat);
 
         } catch (IOException e) {
 

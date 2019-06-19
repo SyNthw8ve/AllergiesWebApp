@@ -74,6 +74,11 @@ public class Location implements java.io.Serializable {
         return this.request_id;
     }
     
+    public void set_request_id(String req_id) {
+        
+        this.request_id = req_id;
+    }
+    
     public void set_date(long date) {
         
         this.date = date;

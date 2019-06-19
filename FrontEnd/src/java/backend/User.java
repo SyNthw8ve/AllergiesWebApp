@@ -69,7 +69,7 @@ public class User implements java.io.Serializable {
         this.id = id;
     }
     
-    public void sert_allergies(List<Allergy> allergies) {
+    public void set_allergies(List<Allergy> allergies) {
         
         this.polen = allergies;
     }
@@ -77,6 +77,11 @@ public class User implements java.io.Serializable {
     public String get_request_id() {
         
         return this.request_id;
+    }
+    
+    public void set_request_id(String req_id) {
+        
+        this.request_id = req_id;
     }
     
 }

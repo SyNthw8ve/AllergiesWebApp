@@ -32,7 +32,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 
 /**
  *
- * @author nuno1
+ * @author mt
  */
 public class ReplicaManagerImp extends UnicastRemoteObject implements ReplicaManager, java.io.Serializable {
 

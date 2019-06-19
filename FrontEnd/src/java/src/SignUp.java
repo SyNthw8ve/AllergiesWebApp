@@ -7,10 +7,8 @@
 package src;
 
 import backend.Allergy;
-import backend.Locations;
 import backend.ReplicaManager;
 import backend.User;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,17 +19,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
+import javax.faces.event.ValueChangeEvent;
 import javax.ws.rs.core.Response;
 
 
@@ -52,7 +45,11 @@ public class SignUp {
     private List<String> allergies;
     private boolean in_use = false;
     
+    private Client cl;
+    
     public SignUp() {
+        
+        cl = new Client();
     }
     
     public String getUsername() 
@@ -92,40 +89,26 @@ public class SignUp {
         this.allergies = allergies;
     }
     
-    public String get_unique_id() {
+    public void handleUsernameChange(ValueChangeEvent event) {
         
-        UUID id = UUID.randomUUID();
+        System.out.println("username changed");
         
-        return id.toString();
+        if (null != event.getNewValue()) {
+
+            
+            
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("username", event.getNewValue());
+        }
     }
     
-    private String get_replica_location() throws IOException {
-
-        String uri = "";
-
-        try {
+    public void handleAllergiesChange(ValueChangeEvent event) {
+        
+        if (null != event.getNewValue()) {
             
-            InputStream in = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/conf.properties");
+            System.out.println("aleerrgies");
 
-            Properties prop = new Properties();
-
-            prop.load(in);
-
-            String regHost = prop.getProperty("reg.host", "localhost");
-            int regPort = Integer.parseInt(prop.getProperty("reg.port", "9000"));
-            
-            ReplicaManager rm = (ReplicaManager) java.rmi.Naming.lookup("rmi://" + regHost + ":"
-                    + regPort + "/primary");
-
-            uri = "http://" + rm.get_address() + ":" + rm.get_port() + "/allergies/replica/";
-
-        } catch (NotBoundException | MalformedURLException | RemoteException | FileNotFoundException ex) {
-
-            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
-
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("allergies", event.getNewValue());
         }
-
-        return uri;
     }
     
     public void add() throws IOException {
@@ -133,7 +116,6 @@ public class SignUp {
         try {
             
             this.in_use = false;
-            String request_id = this.get_unique_id();
            
             LinkedList<Allergy> user_allergies = new LinkedList<>();
             
@@ -142,17 +124,9 @@ public class SignUp {
                 user_allergies.add(new Allergy(-1, Integer.parseInt(al), ""));
             }
             
-            User new_user = new User(this.username, this.password, user_allergies, -1, request_id);
+            User new_user = new User(this.username, this.password, user_allergies, -1, "");
             
-            Client client = ClientBuilder.newClient();
-            
-            String uri = this.get_replica_location();
-            
-            WebTarget webTarget = client.target(uri).path("user");
-            
-            Response resp = webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(Entity.entity(new_user, MediaType.APPLICATION_XML));
-            
-            System.out.println(resp.getStatusInfo());
+            Response resp = this.cl.add_user(new_user);
             
             if(resp.getStatus() == 406) {
                 

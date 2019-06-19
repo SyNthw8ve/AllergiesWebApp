@@ -26,4 +26,11 @@ function onMapClick(e) {
     input_lat.value = e.latlng.lng;
 }
 
+function set_view(lng, lat) {
+    
+    
+    mymap.panTo([lat, lng], 18);
+}
+
+
 mymap.on('click', onMapClick);

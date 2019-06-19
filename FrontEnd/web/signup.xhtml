@@ -33,10 +33,9 @@
 
                     <div class="row">
                         <h:outputText id="error_name" styleClass="red-text" value="Username already in use!" rendered="#{signup.in_use}" />
-
                         <div class="input-field">
                             <i class="material-icons prefix">person</i>
-                            <h:inputText styleClass="validate" id="username" required="true" value="#{signup.username}"/>
+                            <h:inputText styleClass="validate" id="username" required="true" value="#{signup.username}" valueChangeListener="#{signup.handleUsernameChange}"/>
                             <label for="registerForm:username">Username</label>
                             <span class="helper-text" data-error="Username field is required"></span>
                         </div>
@@ -44,15 +43,14 @@
                     <div class="row">
                         <div class="input-field">
                             <i class="material-icons prefix">lock</i>
-                            <h:inputSecret styleClass="validate" id="pass" value="#{signup.password}" required="true" />
+                            <h:inputSecret requiredMessage="" styleClass="validate" id="pass" value="#{signup.password}" required="true" />
                             <label for="registerForm:pass">Password</label>
                             <span class="helper-text" data-error="Password field is required"></span>
                         </div>
                     </div>
                     <div class="row">
-
                         <div class="input-field s12 m12 l12">
-                            <h:selectManyMenu value="#{signup.allergies}">
+                            <h:selectManyMenu value="#{signup.allergies}" valueChangeListener="#{signup.handleAllergiesChange}">
                                 <f:selectItem itemValue="1" itemLabel="Plátano" />
                                 <f:selectItem itemValue="2" itemLabel="Gramíneas" />
                                 <f:selectItem itemValue="3" itemLabel="Oliveira" />

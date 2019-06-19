@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Facelet Title</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
@@ -67,6 +68,7 @@
                                 <th>Longitude</th>
                                 <th>Latitude</th>
                                 <th>Date</th>
+                                <th>View</th>
 
                             </tr>
                         </thead>
@@ -78,6 +80,15 @@
                                     <td>#{value.get_long()}</td>
                                     <td>#{value.get_lat()}</td>
                                     <td>#{value.get_date()}</td>
+                                    <td>
+                                            <h:form>
+                                                <h:commandLink onclick="set_view(#{value.get_lat()}, #{value.get_long()})" action="#{profile.save_id(value.get_id())}" >
+                                                    <f:ajax execute="@form" render="@form" />
+                                                    <i class="material-icons">visibility</i>
+                                                </h:commandLink>
+                                               
+                                            </h:form>
+                                        </td>
                                 </tr>
                             </ui:repeat>
                         </tbody>

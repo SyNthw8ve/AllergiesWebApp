@@ -5,9 +5,11 @@
  */
 package backend;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import data.DeleteLocation;
 import data.DeleteAllergy;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.spi.resource.Singleton;
 import data.Allergies;
@@ -591,7 +593,7 @@ public class ReplicaResource {
 
                     web_resource.type(MediaType.APPLICATION_XML).post(User.class, u);
 
-                } catch (Exception e) {
+                } catch (UniformInterfaceException | ClientHandlerException e) {
 
                     System.out.println(e.toString());
                 }
@@ -618,7 +620,7 @@ public class ReplicaResource {
 
                     web_resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, l);
 
-                } catch (Exception e) {
+                } catch (UniformInterfaceException | ClientHandlerException e) {
 
                     System.out.println(e.toString());
                 }
@@ -647,7 +649,7 @@ public class ReplicaResource {
 
                     web_resource.type(MediaType.APPLICATION_XML).delete(del);
 
-                } catch (Exception e) {
+                } catch (UniformInterfaceException | ClientHandlerException e) {
 
                     System.out.println(e.toString());
                 }
@@ -676,7 +678,7 @@ public class ReplicaResource {
 
                     web_resource.type(MediaType.APPLICATION_XML).put(ClientResponse.class, l);
 
-                } catch (Exception e) {
+                } catch (UniformInterfaceException | ClientHandlerException e) {
 
                     System.out.println(e.toString());
                 }
@@ -703,7 +705,7 @@ public class ReplicaResource {
 
                     web_resource.type(MediaType.APPLICATION_XML).post(ClientResponse.class, allergy);
 
-                } catch (Exception e) {
+                } catch (UniformInterfaceException | ClientHandlerException e) {
 
                     System.out.println(e.toString());
                 }
@@ -732,7 +734,7 @@ public class ReplicaResource {
 
                     web_resource.type(MediaType.APPLICATION_XML).delete(del);
 
-                } catch (Exception e) {
+                } catch (UniformInterfaceException | ClientHandlerException e) {
 
                     System.out.println(e.toString());
                 }
@@ -790,8 +792,6 @@ public class ReplicaResource {
     @Consumes({"application/json", "application/xml"})
     public synchronized void prop_add_location(NewLocation l) {
 
-        int submissionCode = -1;
-
         try {
 
             Statement state = pc.getStatement();
@@ -801,7 +801,7 @@ public class ReplicaResource {
             ResultSet result = state.executeQuery(query);
             result.next();
 
-            submissionCode = result.getInt(1);
+            int submissionCode = result.getInt(1);
 
             query = "INSERT INTO polen (polen_type, long, lat, user_id, data, cod_sub) VALUES (" + l.get_type() + "," + l.get_lng() + ","
                     + l.get_lat() + "," + l.get_user_id() + "," + l.get_date() + "," + submissionCode + ");";
